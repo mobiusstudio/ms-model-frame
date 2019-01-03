@@ -1,8 +1,16 @@
 import { snakeCase } from 'lodash'
 
 export class ColumnArray {
-  constructor(items) {
-    this.items = items
+  constructor(items, tableName = null) {
+    if (tableName && typeof tableName === 'string') {
+      this.items = items.map((item) => {
+        const obj = item
+        obj.table = tableName
+        return obj
+      })
+    } else {
+      this.items = items
+    }
   }
 
   map = func => this.items.map(func)

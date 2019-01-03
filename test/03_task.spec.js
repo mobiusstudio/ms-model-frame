@@ -30,8 +30,8 @@ describe('========== TASK ==========', () => {
 
   it('get', async () => {
     try {
-      const res = await task.from().where`id = ${taskId}`.select().do()
-      checkObject(res[0], taskDataAdd)
+      const res = await task.from().where`id = ${taskId}`.select(task.columns).do()
+      checkObject(res[0], taskDataAdd, task)
     } catch (error) {
       throw error
     }

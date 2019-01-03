@@ -9,18 +9,19 @@ export class DatabaseTable {
     this.tableName = tableName
     this.columns = new ColumnArray([])
     this.pkey = 'id'
-    this.state = sq.from(`"${snakeCase(this.schemaName)}".${snakeCase(this.tableName)}`)
   }
+
+  getState = () => sq.from(`"${snakeCase(this.schemaName)}".${snakeCase(this.tableName)}`)
 
   sqlizePkey = () => `${snakeCase(this.tableName)}.${snakeCase(this.pkey)}`
 
-  from = () => new Table(this.state, this.columns)
+  from = () => new Table(this.getState(), this.columns)
 
   add = async (data) => {
     try {
       const newData = mapKeys(data, (value, key) => snakeCase(key))
-      delete newData.id
-      const sql = this.state.insert(newData).return('id').query
+      delete newData[this.pkey]
+      const sql = this.getState().insert(newData).return(this.pkey).query
       const res = await db.query(sql.text, sql.args)
       if (res.rowCount > 0) return res.rows[0].id
       return 400
@@ -29,27 +30,34 @@ export class DatabaseTable {
     }
   }
 
-  update = async (data, id) => {
+  update = async (data, pkeyValue) => {
     try {
       const newData = mapKeys(data, (value, key) => snakeCase(key))
-      delete newData.id
-      const sql = this.state.where`id = ${id}`.set(newData).query
+      delete newData[this.pkey]
+      const filter = {}
+      filter[`${this.pkey}`] = pkeyValue
+      const sql = this.getState().where(filter).set(newData).query
       const res = await db.query(sql.text, sql.args)
-      if (res.rowCount > 0) return 200
+      if (res.rowCount > 0) return 200 // TODO: errorhandler
       return 400
     } catch (error) {
       throw error
     }
   }
 
-  delete = async (id) => {
+  delete = async (pkeyValue) => {
     try {
-      const sql = this.state.where`id = ${id}`.delete.query
+      const filter = {}
+      filter[`${this.pkey}`] = pkeyValue
+      const sql = this.getState().where(filter).delete.query
       const res = await db.query(sql.text, sql.args)
-      if (res.rowCount > 0) return 200
+      if (res.rowCount > 0) return 200 // TODO: errorhandler
       return 400
     } catch (error) {
       throw error
     }
   }
+
+  // TODO: batchAdd
+  // TODO: batchDelete
 }

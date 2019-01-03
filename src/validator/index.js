@@ -9,18 +9,18 @@ const ERRORS = {
 errors.register(ERRORS)
 
 export const validate = (data, schema, ext) => {
-  if (typeof(schema) === 'object') {
+  if (typeof schema === 'object') {
     /* eslint-disable no-param-reassign */
     schema = Joi.object(schema)
   }
   if (ext) {
     if (Array.isArray(ext)) {
       const required = {}
-      for (const r of ext) {
-        required[r] = Joi.required()
-      }
+      Object.keys(ext).forEach((key) => {
+        required[key] = Joi.required()
+      })
       ext = Joi.object(required)
-    } else if (typeof(ext) === 'object') {
+    } else if (typeof ext === 'object') {
       ext = Joi.object(ext)
     }
     schema = schema.concat(ext)
@@ -34,17 +34,17 @@ export const validate = (data, schema, ext) => {
 
 export const getSchema = (schema, ...keys) => {
   const schemaKeys = []
-  for (const key of keys) {
+
+  keys.forEach((key) => {
     if (Array.isArray(key)) {
       schemaKeys.push(...key)
     } else {
       schemaKeys.push(key)
     }
-  }
+  })
   const sub = {}
-  for (const key of schemaKeys) {
+  Object.keys(schemaKeys).forEach((key) => {
     sub[key] = schema[key]
-  }
+  })
   return sub
 }
-

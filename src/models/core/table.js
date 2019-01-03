@@ -40,6 +40,8 @@ export class Table {
     return new Table(state, newColumns)
   }
 
+  // TODO: paging
+
   do = async () => {
     try {
       const sql = this.state.query
