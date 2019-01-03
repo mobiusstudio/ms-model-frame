@@ -1,5 +1,5 @@
 import { snakeCase } from 'lodash'
-import { sq } from '../../global'
+import { sq } from './sq'
 
 
 export class Table {
