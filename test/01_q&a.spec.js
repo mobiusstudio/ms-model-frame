@@ -1,5 +1,4 @@
-import { DatabaseTable, ColumnArray, Column } from '../src/models/base'
-import { sq } from '../src/global'
+import { DatabaseTable, ColumnArray, Column } from '../src/models/core'
 
 class Question extends DatabaseTable {
   constructor () {
