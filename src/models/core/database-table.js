@@ -23,7 +23,7 @@ export class DatabaseTable {
       const sql = this.state.insert(newData).return('id').query
       const res = await db.query(sql.text, sql.args)
       if (res.rowCount > 0) return res.rows[0].id
-      return null
+      return 400
     } catch (error) {
       throw error
     }
@@ -36,7 +36,7 @@ export class DatabaseTable {
       const sql = this.state.where`id = ${id}`.set(newData).query
       const res = await db.query(sql.text, sql.args)
       if (res.rowCount > 0) return 200
-      return null
+      return 400
     } catch (error) {
       throw error
     }
@@ -47,7 +47,7 @@ export class DatabaseTable {
       const sql = this.state.where`id = ${id}`.delete.query
       const res = await db.query(sql.text, sql.args)
       if (res.rowCount > 0) return 200
-      return null
+      return 400
     } catch (error) {
       throw error
     }
