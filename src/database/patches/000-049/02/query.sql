@@ -9,10 +9,10 @@ CREATE SEQUENCE "task".task_id_seq;
 CREATE OR REPLACE FUNCTION "task".task_id
 (OUT result bigint) AS $$
 DECLARE
-	our_epoch bigint := 1466352806721;
-	seq_id bigint;
-	now_millis bigint;
-	shard_id int := 0;
+  our_epoch bigint := 1466352806721;
+  seq_id bigint;
+  now_millis bigint;
+  shard_id int := 0;
 BEGIN
   SELECT nextval('"task".task_id_seq') % 128
   INTO seq_id;
@@ -22,7 +22,7 @@ BEGIN
   (now_millis - our_epoch) << 12; 
 result := result |
 (shard_id << 7);
-	result := result |
+  result := result |
 (seq_id);
 END;
 $$ LANGUAGE PLPGSQL;
@@ -39,5 +39,5 @@ CREATE TABLE "task".task
   PRIMARY KEY (id)
 )
 WITH (
-	OIDS=FALSE
+  OIDS=FALSE
 );
