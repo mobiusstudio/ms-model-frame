@@ -10,7 +10,7 @@ describe('========== TASK ==========', () => {
   const task = new Task()
   let taskId = null
 
-  it('addTask', async () => {
+  it('add', async () => {
     try {
       const res = await task.add(taskDataAdd)
       taskId = res
@@ -19,7 +19,7 @@ describe('========== TASK ==========', () => {
     }
   })
 
-  it('getTaskList', async () => {
+  it('list', async () => {
     try {
       const res = await task.from().select().do()
       res.length.should.equal(7)
@@ -28,7 +28,7 @@ describe('========== TASK ==========', () => {
     }
   })
 
-  it('getTask', async () => {
+  it('get', async () => {
     try {
       const res = await task.from().where`id = ${taskId}`.select().do()
       checkObject(res[0], taskDataAdd)
@@ -37,9 +37,18 @@ describe('========== TASK ==========', () => {
     }
   })
 
-  it('updateTask', async () => {
+  it('update', async () => {
     try {
       const res = await task.update(taskDataUpdate, taskId)
+      res.should.equal(200)
+    } catch (error) {
+      throw (error)
+    }
+  })
+
+  it('delete', async () => {
+    try {
+      const res = await task.delete(taskId)
       res.should.equal(200)
     } catch (error) {
       throw (error)

@@ -41,4 +41,15 @@ export class DatabaseTable {
       throw error
     }
   }
+
+  delete = async (id) => {
+    try {
+      const sql = this.state.where`id = ${id}`.delete.query
+      const res = await db.query(sql.text, sql.args)
+      if (res.rowCount > 0) return 200
+      return null
+    } catch (error) {
+      throw error
+    }
+  }
 }
