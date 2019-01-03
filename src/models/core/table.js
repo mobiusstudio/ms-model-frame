@@ -1,7 +1,6 @@
 import { snakeCase } from 'lodash'
 import { sq } from './sq'
 
-
 export class Table {
   constructor(state, columns) {
     this.state = state
@@ -41,9 +40,14 @@ export class Table {
     return new Table(state, newColumns)
   }
 
-  do = () => {
-    const { query } = this.state
-    // console.log(query)
-    return query
+  do = async () => {
+    try {
+      const sql = this.state.query
+      const res = await db.query(sql.text, sql.args)
+      if (res.rowCount > 0) return res.row[0]
+      return null
+    } catch (error) {
+      throw error
+    }
   }
 }
