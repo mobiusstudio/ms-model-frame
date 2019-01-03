@@ -36,4 +36,11 @@ errors.register = (options) => {
   })
 }
 
+errors.update = (localization) => {
+  errors.localization = Object.keys(localization).reduce((previousLocalization, key) => {
+    previousLocalization[key] = localization[key]
+    return previousLocalization
+  }, errors.localization)
+}
+
 export default errors

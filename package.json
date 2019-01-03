@@ -6,23 +6,27 @@
     "node": "10.15.0",
     "npm": "6.4.1"
   },
-  "main": "src/index.js",
+  "main": "./dist/models.js",
   "scripts": {
     "build": "npx babel-node bin/build",
-    "initdb": "npx babel-node bin/init",
+    "initdb": "npx babel-node bin/build; babel-node bin/init",
     "updatedb": "npx babel-node bin/build; babel-node bin/update",
-    "test": "NODE_ENV=test mocha --require @babel/register"
+    "test": "npx babel-node bin/build; NODE_ENV=test mocha --require @babel/register"
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
     "@babel/runtime": "^7.2.0",
     "@sqorn/pg": "0.0.45",
+    "bluebird": "^3.5.3",
+    "del": "^3.0.0",
     "joi": "^14.3.1",
     "lodash": "^4.17.11",
     "log4js": "^3.0.6",
+    "ncp": "^2.0.0",
     "pg": "^7.7.1",
     "pg-then": "^1.2.1",
-    "restify-errors": "^6.1.1"
+    "restify-errors": "^6.1.1",
+    "webpack": "^4.28.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -32,16 +36,14 @@
     "@babel/preset-env": "^7.2.3",
     "@babel/register": "^7.0.0",
     "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.4",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "del": "^3.0.0",
     "eslint": "^5.11.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-mocha": "^5.2.0",
-    "mocha": "^5.2.0",
-    "ncp": "^2.0.0",
-    "webpack": "^4.28.3"
+    "mocha": "^5.2.0"
   },
   "repository": {
     "type": "git",

@@ -9,6 +9,7 @@ function bundle() {
       if (err) {
         return reject(err)
       }
+      // eslint-disable-next-line no-console
       console.log(stats.toString(webpackConfig.stats))
       return resolve()
     }
@@ -18,7 +19,7 @@ function bundle() {
 
 async function copy() {
   const ncp = Promise.promisify(require('ncp'))
-  await ncp('src/db/patches', 'dist/patches')
+  await ncp('src/database/patches', 'dist/patches')
 }
 
 function format(time) {
@@ -27,16 +28,20 @@ function format(time) {
 
 async function build() {
   const start = new Date()
+  // eslint-disable-next-line no-console
   console.log(`[${format(start)}] cleanup...`)
   await del(['.tmp', 'dist/*', '!dist/,git'], { dot: true })
+  // eslint-disable-next-line no-console
   console.log(`[${format(start)}] Starting build...`)
   await bundle()
   await copy()
   const end = new Date()
   const eslapse = end.getTime() - start.getTime()
+  // eslint-disable-next-line no-console
   console.log(`[${format(end)}] Finished build after ${eslapse} ms`)
 }
 
-build().catch(err => {
-  console.error(err.stack)
+build().catch((err) => {
+  // eslint-disable-next-line no-console
+  console.error(err)
 })
