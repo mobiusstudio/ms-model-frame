@@ -1,7 +1,7 @@
 import { snakeCase } from 'lodash'
 import { Table } from './table'
 import { ColumnArray } from './column-array'
-import { sq } from '../../global'
+import { sq } from './sq'
 
 export class DatabaseTable {
   constructor (schemaName, tableName) {

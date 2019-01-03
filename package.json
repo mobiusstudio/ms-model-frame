@@ -14,7 +14,8 @@
     "@babel/polyfill": "^7.2.5",
     "@sqorn/pg": "0.0.45",
     "lodash": "^4.17.11",
-    "pg": "^7.7.1"
+    "pg": "^7.7.1",
+    "pg-then": "^1.2.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
