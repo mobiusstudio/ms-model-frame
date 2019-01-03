@@ -17,7 +17,7 @@ export class Column {
     return res
   }
 
-  static Type = { Id: 1, String: 2, Number: 3 }
+  static Type = { Id: 1, String: 2, Number: 3, Boolean: 4, Utc: 5 }
 }
 
 export class AggrColumn extends Column {
