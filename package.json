@@ -1,5 +1,5 @@
 {
-  "name": "ms-model-frame",
+  "name": "ymir-models",
   "version": "0.0.1",
   "description": "quick deploy model frame",
   "engines": {
@@ -45,12 +45,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mobiusstudio/ms-model-frame.git"
+    "url": "git+https://github.com/mobiusstudio/ymir-models.git"
   },
   "author": "licetus",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mobiusstudio/ms-model-frame/issues"
+    "url": "https://github.com/mobiusstudio/ymir-models/issues"
   },
-  "homepage": "https://github.com/mobiusstudio/ms-model-frame#readme"
+  "homepage": "https://github.com/mobiusstudio/ymir-models#readme"
 }

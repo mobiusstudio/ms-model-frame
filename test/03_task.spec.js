@@ -6,6 +6,7 @@ describe('========== TASK ==========', () => {
     const getList = async () => {
       try {
         const res = await task.from().select().do()
+        // eslint-disable-next-line
         console.log(res)
       } catch (error) {
         throw error
