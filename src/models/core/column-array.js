@@ -1,7 +1,7 @@
 import { snakeCase } from 'lodash'
 
 export class ColumnArray {
-  constructor (items) {
+  constructor(items) {
     this.items = items
   }
 
@@ -15,7 +15,10 @@ export class ColumnArray {
     const res = {}
     this.items.forEach((item) => {
       const alias = item.alias ? item.alias : item.name
-      if (res[`${snakeCase(alias)}`]) { console.warn('duplicate column', item.alias, item.name) }
+      if (res[`${snakeCase(alias)}`]) {
+        // eslint-disable-next-line no-console
+        console.warn('duplicate column', item.alias, item.name)
+      }
       res[`${snakeCase(alias)}`] = item.sqlize()
     })
     return res

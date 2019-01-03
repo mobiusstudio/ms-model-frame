@@ -3,7 +3,7 @@ import { sq } from './sq'
 
 
 export class Table {
-  constructor (state, columns) {
+  constructor(state, columns) {
     this.state = state
     this.columns = columns
   }
@@ -36,14 +36,14 @@ export class Table {
   }
 
   select = (columns = null) => {
-    const newColumns = columns ? columns : this.columns
+    const newColumns = columns || this.columns
     const state = this.state.return(newColumns.objlize())
     return new Table(state, newColumns)
   }
 
   do = () => {
-    const query = this.state.query
-    console.log(query)
+    const { query } = this.state
+    // console.log(query)
     return query
   }
 }

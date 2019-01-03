@@ -4,7 +4,7 @@ import { ColumnArray } from './column-array'
 import { sq } from './sq'
 
 export class DatabaseTable {
-  constructor (schemaName, tableName) {
+  constructor(schemaName, tableName) {
     this.schemaName = schemaName
     this.tableName = tableName
     this.columns = new ColumnArray([])

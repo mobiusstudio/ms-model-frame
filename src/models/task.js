@@ -1,12 +1,12 @@
 import { DatabaseTable, Column } from './core'
 
 export class Task extends DatabaseTable {
-  constructor (data) {
+  constructor(data) {
     super('task', 'task')
     const columns = []
     if (data) {
       if (data.id || data.id === 0) {
-        columns.push(new Column({ name: 'id', type: Column.Type.Id, alias: 'taskId', table: this.tableName}))
+        columns.push(new Column({ name: 'id', type: Column.Type.Id, alias: 'taskId', table: this.tableName }))
       }
       if (data.isCompleted || data.isCompleted === false) {
         columns.push(new Column({ name: 'isCompleted', type: Column.Type.Boolean, table: this.tableName }))

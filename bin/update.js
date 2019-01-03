@@ -1,8 +1,8 @@
 import log4js from 'log4js'
-const log = log4js.getLogger()
-
 import options from '../test/config/config.json'
 import { configure } from '../src'
+
+const log = log4js.getLogger()
 
 async function update() {
   const dbManager = await configure(options)
@@ -12,6 +12,7 @@ async function update() {
   log.info(`After update db version: ${dbManager.version}`)
 }
 
-update().catch(err => {
+update().catch((err) => {
+  // eslint-disable-next-line no-console
   console.error(err.stack)
 })
