@@ -1,4 +1,4 @@
-import { camelCase, snakeCase } from 'lodash'
+import { camelCase, snakeCase, mapKeys } from 'lodash'
 import { sq } from './sq'
 
 export class Table {
@@ -8,8 +8,8 @@ export class Table {
   }
 
   // sample: where(e`genre = ${'Fantasy'}`)
-  where = (strings, ...values) => {
-    const state = this.state.where(strings, ...values)
+  where = (string, ...values) => {
+    const state = this.state.where(string, ...values)
     return new Table(state, this.columns)
   }
 
@@ -45,13 +45,7 @@ export class Table {
       const sql = this.state.query
       const res = await db.query(sql.text, sql.args)
       if (res.rowCount > 0) {
-        const newRes = res.rows.map((item) => {
-          const newItem = {}
-          Object.keys(item).forEach((key) => {
-            newItem[camelCase(key)] = item[key]
-          })
-          return newItem
-        })
+        const newRes = res.rows.map(item => mapKeys(item, (value, key) => camelCase(key)))
         return newRes
       }
       return null
