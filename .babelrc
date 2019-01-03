@@ -4,6 +4,5 @@
   ],
   "plugins": [
     ["@babel/plugin-proposal-class-properties", { "useBuiltIns": "entry" }],
-    ["@babel/plugin-proposal-export-default-from"],
   ]
 }
