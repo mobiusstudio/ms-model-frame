@@ -21,7 +21,7 @@ export class Table {
         ons[column.sqlize()] = sq.raw(dt.sqlizePkey())
       }
     })
-    const state = this.state.join(`${snakeCase(dt.schemaName)}.${snakeCase(dt.tableName)}`)
+    const state = this.state.join(`"${snakeCase(dt.schemaName)}".${snakeCase(dt.tableName)}`)
       .on(ons)
     const columns = this.columns.concat(dt.columns)
     return new Table(state, columns)
@@ -30,7 +30,7 @@ export class Table {
   groupBy = (columns, aggrColumns) => {
     const newColumns = columns.concat(aggrColumns)
     const state = this.state.groupBy(columns.map(column => column.sqlize()))
-      .return(newColumns.objlize)
+      .return(newColumns.objlize())
 
     return new Table(state, newColumns)
   }
