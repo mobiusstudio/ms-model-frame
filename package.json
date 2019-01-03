@@ -8,6 +8,9 @@
   },
   "main": "src/index.js",
   "scripts": {
+    "build": "npx babel-node bin/build",
+    "initdb": "npx babel-node bin/init",
+    "updatedb": "npx babel-node bin/build; babel-node bin/update",
     "test": "NODE_ENV=test mocha --require @babel/register"
   },
   "dependencies": {
@@ -24,6 +27,7 @@
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.2.3",
     "@babel/preset-env": "^7.2.3",
     "@babel/register": "^7.0.0",

@@ -2,26 +2,24 @@ import pgAsPromised from 'pg-then'
 import connections from './connections'
 import { DbManager } from './manager'
 
-const { slice } = []
-
 // configure pg
 pgAsPromised.pg.defaults.parseInt8 = true
 
-function configure(options) {
+const configure = (options) => {
   connections.configure(options)
   return new DbManager({ connections })
 }
 
-async function query() {
-  let args = slice.call(arguments)
+const query = async (...args) => {
+  let argments = args
   let connection = null
   const database = args[0]
-  if (connections.postgres.hasOwnProperty(database)) {
+  if (Object.prototype.hasOwnProperty.call(connections.postgres, database)) {
     connection = connections.postgres[database]
     if (!connection) {
       throw new Error(`Connection[${database}] isn't existed`)
     }
-    args = slice.call(arguments, 1)
+    argments = args.slice(1)
   } else {
     connection = connections.postgres.default
     if (!connection) {
@@ -31,7 +29,7 @@ async function query() {
   let client = null
   try {
     client = pgAsPromised.Client(connection)
-    return await client.query.apply(client, args)
+    return await client.query(...argments)
   } catch (err) {
     throw err
   } finally {
@@ -39,10 +37,11 @@ async function query() {
   }
 }
 
-async function transaction(database, actions) {
+const transaction = async (database, actions) => {
+  let newActions = actions
   let connection = null
   if (typeof database === 'function') {
-    actions = database
+    newActions = database
     connection = connections.postgres.default
   } else {
     connection = connections.postgres[database]
@@ -51,7 +50,7 @@ async function transaction(database, actions) {
   try {
     client = pgAsPromised.Client(connection)
     await client.query('BEGIN')
-    const result = await actions(client)
+    const result = await newActions(client)
     await client.query('COMMIT')
     return result
   } catch (err) {

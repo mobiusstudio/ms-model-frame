@@ -1,6 +1,6 @@
 import errors from 'restify-errors'
 
-normalize = (name) => {
+const normalize = (name) => {
   /* eslint-disable no-param-reassign */
   // name = name.charAt(0).toUpperCase() + name.slice(1)
   if (!name.endsWith('Error')) {
@@ -18,7 +18,7 @@ errors.lang = (error) => {
 }
 
 errors.register = (options) => {
-  Object.keys(options).forEach(name => {
+  Object.keys(options).forEach((name) => {
     const config = options[name]
     const errorName = normalize(name)
     switch (typeof config) {

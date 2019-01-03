@@ -3,7 +3,7 @@ const connections = {
   redis: {},
 }
 
-function init(type, name, options) {
+const init = (type, name, options) => {
   if (name === 'default') {
     throw new Error('databse name "default" is reserved.')
   }
@@ -53,7 +53,7 @@ function init(type, name, options) {
   }
 }
 
-function configure(config) {
+const configure = (config) => {
   Object.keys(config).forEach((type) => {
     const typedConfig = config[type]
     Object.keys(typedConfig).forEach((name) => {

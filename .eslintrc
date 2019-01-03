@@ -19,7 +19,7 @@
     "global-require": 0,
     "indent": [
       "error",
-      "space"
+      2
     ],
     "no-tabs": [
       "off"
