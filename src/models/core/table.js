@@ -1,4 +1,4 @@
-import { snakeCase } from 'lodash'
+import { camelCase, snakeCase } from 'lodash'
 import { sq } from './sq'
 
 export class Table {
@@ -44,7 +44,16 @@ export class Table {
     try {
       const sql = this.state.query
       const res = await db.query(sql.text, sql.args)
-      if (res.rowCount > 0) return res.row[0]
+      if (res.rowCount > 0) {
+        const newRes = res.rows.map((item) => {
+          const newItem = {}
+          Object.keys(item).forEach((key) => {
+            newItem[camelCase(key)] = item[key]
+          })
+          return newItem
+        })
+        return newRes
+      }
       return null
     } catch (error) {
       throw error

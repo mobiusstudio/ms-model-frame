@@ -22,7 +22,7 @@ class Answer extends DatabaseTable {
 }
 
 describe('========== SELECT / JOIN / GROUP BY  ==========', () => {
-  it('SELECT ALL', () => {
+  it('select all', () => {
     const question = new Question()
     const table = question.from().select()
     const { query } = table.state
@@ -30,7 +30,7 @@ describe('========== SELECT / JOIN / GROUP BY  ==========', () => {
     query.args.length.should.equal(0)
   })
 
-  it('SELECT EQUAL(=)', () => {
+  it('select equal(=)', () => {
     const question = new Question()
     const key = '资料'
     const table = question.from().where({ content: key }).select()
@@ -39,7 +39,7 @@ describe('========== SELECT / JOIN / GROUP BY  ==========', () => {
     query.args[0].should.equal('资料')
   })
 
-  it('SELECT LIKE', () => {
+  it('select like', () => {
     const question = new Question()
     const key = '%资料%'
     const table = question.from().where`content LIKE ${key}`.select()
@@ -48,7 +48,7 @@ describe('========== SELECT / JOIN / GROUP BY  ==========', () => {
     query.args[0].should.equal('%资料%')
   })
 
-  it('JOIN', () => {
+  it('join', () => {
     const question = new Question()
     const answer = new Answer()
     const key = '%资料%'
@@ -59,7 +59,7 @@ describe('========== SELECT / JOIN / GROUP BY  ==========', () => {
     query.args[0].should.equal('%资料%')
   })
 
-  it('GROUP BY', () => {
+  it('group by', () => {
     const question = new Question()
     const answer = new Answer()
     const key = '%资料%'

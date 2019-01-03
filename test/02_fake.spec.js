@@ -2,8 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import { sqlizeListParams } from '../src/utils'
 
-describe('* Test data ============================', () => {
-  it('Create fake test data', async () => {
+describe('========== FAKE DATA  ==========', () => {
+  it('create', async () => {
     const dataPath = path.join(__dirname, './mock/data')
     const files = fs.readdirSync(dataPath)
     files.sort()
@@ -14,7 +14,7 @@ describe('* Test data ============================', () => {
     const query = queryArr.join(';')
     await db.query(query)
   })
-  it('Check fake test data', async () => {
+  it('check', async () => {
     const checkQuery = `
       SELECT * FROM "task".task
     `
@@ -32,8 +32,8 @@ describe('* Test data ============================', () => {
   })
 })
 
-describe('* Test generate list params =============', () => {
-  it('Check filter', () => {
+describe('========== LIST PARAMS  ==========', () => {
+  it('filter', () => {
     const params = {
       filters: ['wow LIKE \'%TEMP%\'', 'userId >= 1', 'userName = \'Lily\'', 'users @> array[1]'],
     }
@@ -41,7 +41,7 @@ describe('* Test generate list params =============', () => {
     string.should.equal(' WHERE wow LIKE \'%TEMP%\' AND user_id >= 1 AND user_name = \'Lily\' AND users @> array[1] ORDER BY id DESC ')
   })
 
-  it('Check count', () => {
+  it('count', () => {
     const params = {
       next: 100,
       pagesize: 1,
@@ -51,7 +51,7 @@ describe('* Test generate list params =============', () => {
     str.should.equal('   ')
   })
 
-  it('Check order', () => {
+  it('order by', () => {
     const params = {
       pagesize: 10,
       orderBy: 'id desc',
