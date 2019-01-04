@@ -1,5 +1,10 @@
 import { camelCase, snakeCase, mapKeys } from 'lodash'
+import errors from '../../errors'
 import { sq } from './sq'
+
+errors.register({
+  InvalidFilterSymbol: 400,
+})
 
 export class Table {
   constructor(state, columns) {
@@ -40,7 +45,36 @@ export class Table {
     return new Table(state, newColumns)
   }
 
-  // TODO: paging
+  filter = (state, filters) => {
+    if (filters.length === 0) return state
+    const symbols = ['=', '<>', '>', '<', '>=', '<=', 'LIKE', '@>', '<@']
+    let newState = state
+    filters.forEach((item) => {
+      if (!symbols.includes(item.symbol)) throw new errors.InvalidFilterSymbolError(item.symbol)
+      newState = newState.where`${sq.raw(`${item.key}`)} ${sq.raw(`${item.symbol}`)} ${item.value}`
+    })
+    return newState
+  }
+
+  paging = (pkey, params) => {
+    const { page, next, filters, orderBy } = params
+    const pagesize = params.pagesize || 10
+    let state
+    if (typeof page === 'number') { // page type
+      state = this.state.limit(pagesize).offset(page * pagesize)
+    } else if (typeof next === 'number') { // next type
+      state = this.state.limit(pagesize).where`${sq.raw(`${pkey}`)} < ${next}`
+    }
+    if (filters) {
+      state = this.filter(state, filters)
+    }
+    if (orderBy && orderBy.length > 0) {
+      orderBy.forEach((item) => {
+        state = state.orderBy(item)
+      })
+    }
+    return new Table(state, this.columns)
+  }
 
   do = async () => {
     try {

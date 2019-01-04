@@ -91,4 +91,33 @@ describe('========== SELECT / JOIN / GROUP BY  ==========', () => {
     query.text.should.equal('select question.answer_id answer_id, array_agg(question.id) aggr_id, array_agg(question.content) aggr_content from "library".question join "library".answer on (question.answer_id = answer.id) where (content LIKE $1) group by (question.answer_id)')
     query.args[0].should.equal('%资料%')
   })
+
+  it('paging', () => {
+    const question = new Question()
+    const pkey = 'id'
+    const params = {
+      page: 10,
+      pagesize: 20,
+      next: 15,
+      filters: [
+        { key: 'id', symbol: '>', value: 1000 },
+        { key: 'content', symbol: 'LIKE', value: '%资料%' },
+        { key: 'tag', symbol: '@>', value: ['a', 'b', 'c'] },
+      ],
+      orderBy: [
+        { by: 'key1', sort: 'desc' },
+        { by: 'key2', sort: 'asc' },
+        { by: 'key3' },
+      ],
+    }
+    const { query } = question.from().paging(pkey, params).state
+    query.text.should.equal('select * from "library".question where (id > $1) and (content LIKE $2) and (tag @> $3) order by key1 desc, key2 asc, key3 limit $4 offset $5')
+    query.args[0].should.equal(1000)
+    query.args[1].should.equal('%资料%')
+    query.args[2][0].should.equal('a')
+    query.args[2][1].should.equal('b')
+    query.args[2][2].should.equal('c')
+    query.args[3].should.equal(20)
+    query.args[4].should.equal(200)
+  })
 })
