@@ -36,9 +36,7 @@ export class DatabaseTable {
       this.columns.validate(data)
       const newData = mapKeys(data, (value, key) => snakeCase(key))
       delete newData[this.pkey]
-      const filter = {}
-      filter[`${this.pkey}`] = pkeyValue
-      const sql = this.getState().where(filter).set(newData).query
+      const sql = this.getState().where`${sq.raw(`${this.pkey}`)} = ${pkeyValue}`.set(newData).query
       const res = await db.query(sql.text, sql.args)
       if (res.rowCount > 0) return 200 // TODO: errorhandler
       return 400
@@ -49,10 +47,11 @@ export class DatabaseTable {
 
   delete = async (pkeyValue) => {
     try {
-      const filter = {}
-      filter[`${this.pkey}`] = pkeyValue
-      this.columns.validate(filter)
-      const sql = this.getState().where(filter).delete.query
+      const data = {
+        [`${this.pkey}`]: pkeyValue,
+      }
+      this.columns.validate(data)
+      const sql = this.getState().where`${sq.raw(`${this.pkey}`)} = ${pkeyValue}`.delete.query
       const res = await db.query(sql.text, sql.args)
       if (res.rowCount > 0) return 200 // TODO: errorhandler
       return 400
