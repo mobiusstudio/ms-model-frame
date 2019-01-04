@@ -1,4 +1,11 @@
+import Joi from 'joi'
 import { snakeCase } from 'lodash'
+import { BaseColumn } from './column-base'
+import errors from '../../errors'
+
+errors.register({
+  ValidateFailed: 400,
+})
 
 export class ColumnArray {
   constructor(items, tableName = null) {
@@ -17,6 +24,18 @@ export class ColumnArray {
 
   forEach = (func) => {
     this.items.forEach(func)
+  }
+
+  validate = (data) => {
+    const obj = {}
+    this.items.forEach((item) => {
+      obj[item.name] = typeof item.type === 'string' ? BaseColumn.getRule(item.type) : item.type
+    })
+    const schema = Joi.object(obj)
+    const result = Joi.validate(data, schema)
+    if (result.error) {
+      throw new errors.ValidateFailedError(result.error.details[0].message)
+    }
   }
 
   objlize = () => {

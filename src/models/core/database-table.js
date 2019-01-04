@@ -19,6 +19,7 @@ export class DatabaseTable {
 
   add = async (data) => {
     try {
+      this.columns.validate(data)
       const newData = mapKeys(data, (value, key) => snakeCase(key))
       delete newData[this.pkey]
       const sql = this.getState().insert(newData).return(this.pkey).query
@@ -32,6 +33,7 @@ export class DatabaseTable {
 
   update = async (data, pkeyValue) => {
     try {
+      this.columns.validate(data)
       const newData = mapKeys(data, (value, key) => snakeCase(key))
       delete newData[this.pkey]
       const filter = {}
@@ -49,6 +51,7 @@ export class DatabaseTable {
     try {
       const filter = {}
       filter[`${this.pkey}`] = pkeyValue
+      this.columns.validate(filter)
       const sql = this.getState().where(filter).delete.query
       const res = await db.query(sql.text, sql.args)
       if (res.rowCount > 0) return 200 // TODO: errorhandler

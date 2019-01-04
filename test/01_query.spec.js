@@ -4,10 +4,22 @@ class Question extends DatabaseTable {
   constructor() {
     super('library', 'question')
     this.columns = new ColumnArray([
-      new Column({ name: 'id', type: Column.Type.Id, alias: 'questionId', table: 'question' }),
-      new Column({ name: 'content', type: Column.Type.String, table: 'question' }),
-      new Column({ name: 'answerId', type: Column.Type.Id, table: 'question', foreign: 'answer' }),
-    ])
+      new Column({
+        name: 'id',
+        alias: 'questionId',
+        type: 'id',
+      }),
+      new Column({
+        name: 'content',
+        table: 'question',
+        type: 'string',
+      }),
+      new Column({
+        name: 'answerId',
+        foreign: 'answer',
+        type: 'id',
+      }),
+    ], this.tableName)
   }
 }
 
@@ -15,9 +27,16 @@ class Answer extends DatabaseTable {
   constructor() {
     super('library', 'answer')
     this.columns = new ColumnArray([
-      new Column({ name: 'id', type: Column.Type.Id, alias: 'answerId', table: 'answer' }),
-      new Column({ name: 'description', type: Column.Type.String, table: 'answer' }),
-    ])
+      new Column({
+        name: 'id',
+        alias: 'answerId',
+        type: 'id',
+      }),
+      new Column({
+        name: 'description',
+        type: 'id',
+      }),
+    ], this.tableName)
   }
 }
 

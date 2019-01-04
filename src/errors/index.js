@@ -22,15 +22,15 @@ errors.register = (options) => {
     const config = options[name]
     const errorName = normalize(name)
     switch (typeof config) {
-    case 'number':
-      errors.makeConstructor(errorName, {
-        statusCode: config,
-      })
-      return
-    case 'object':
-      errors.makeConstructor(errorName, config)
-      return
-    default:
+      case 'number':
+        errors[errorName] = errors.makeConstructor(errorName, {
+          statusCode: config,
+        })
+        return
+      case 'object':
+        errors[errorName] = errors.makeConstructor(errorName, config)
+        return
+      default:
     }
     throw new Error(`Invalid error config for ${errorName}`)
   })

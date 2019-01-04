@@ -1,5 +1,5 @@
 {
-  "ValidationFailed": "Validation failed.",
+  "ValidateFailed": "Validation failed.",
   "AccountOrPasswordInvalid": "Invalid account or password.",
   "InvalidId": "This id does not exist in system.",
   "DBCreateFailed": "Create object failed.",

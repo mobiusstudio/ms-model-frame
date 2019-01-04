@@ -7,24 +7,24 @@ export class Task extends DatabaseTable {
       new Column({
         name: 'id',
         alias: 'taskId',
-        rule: '',
+        type: 'id',
       }),
       new Column({
         name: 'isCompleted',
-        rule: '',
+        type: 'boolean',
       }),
       new Column({
         name: 'title',
-        rule: '',
+        type: 'string',
       }),
       new Column({
         name: 'content',
         alias: 'task_content',
-        rule: '',
+        type: 'string',
       }),
       new Column({
         name: 'deadline',
-        rule: '',
+        type: 'timestamp',
       }),
     ], this.tableName)
   }

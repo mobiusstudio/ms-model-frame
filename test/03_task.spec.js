@@ -3,7 +3,7 @@ import { checkObject } from './utils'
 const { Task } = global.models
 
 const taskDataAdd = { isCompleted: true, title: 'test title', content: 'test content', deadline: 2147483656 }
-const taskDataUpdate = { isCompleted: false, title: 'test title', content: 'test content', deadline: 2147483656 }
+const taskDataUpdate = { isCompleted: false, title: 'test title 2', content: 'test content 2', deadline: 2147483656 }
 
 
 describe('========== TASK ==========', () => {

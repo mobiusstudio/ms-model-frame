@@ -1,5 +1,5 @@
 {
-  "ValidationFailed": "数据校验失败",
+  "ValidateFailed": "数据校验失败",
   "AccountOrPasswordInvalid": "用户名或密码不正确",
   "InvalidId": "id不存在",
   "DBCreateFailed": "创建数据失败",
