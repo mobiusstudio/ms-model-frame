@@ -2,6 +2,13 @@ import { snakeCase, mapKeys } from 'lodash'
 import { Table } from './table'
 import { ColumnArray } from './column-array'
 import { sq } from './sq'
+import errors from '../../errors'
+
+errors.register({
+  AddFailed: 400,
+  UpdateFailed: 400,
+  DeleteFaild: 400,
+})
 
 export class DatabaseTable {
   constructor(schemaName, tableName) {
@@ -24,8 +31,8 @@ export class DatabaseTable {
       delete newData[this.pkey]
       const sql = this.getState().insert(newData).return(this.pkey).query
       const res = await db.query(sql.text, sql.args)
-      if (res.rowCount > 0) return res.rows[0].id
-      return 400
+      if (res.rowCount === 0) throw new errors.AddFailedError()
+      return res.rows[0].id
     } catch (error) {
       throw error
     }
@@ -48,15 +55,34 @@ export class DatabaseTable {
     }
   }
 
-  update = async (data, pkeyValue) => {
+  update = async ({ data, pkeyValue }) => {
     try {
-      this.columns.validate(data)
+      const tempData = data
+      tempData[`${this.pkey}`] = pkeyValue
+      this.columns.validate(tempData)
       const newData = mapKeys(data, (value, key) => snakeCase(key))
       delete newData[this.pkey]
       const sql = this.getState().where`${sq.raw(`${this.pkey}`)} = ${pkeyValue}`.set(newData).query
       const res = await db.query(sql.text, sql.args)
-      if (res.rowCount > 0) return 200 // TODO: errorhandler
-      return 400
+      if (res.rowCount === 0) throw new errors.UpdateFailedError()
+      return pkeyValue
+    } catch (error) {
+      throw error
+    }
+  }
+
+  batchUpdate = async (paramsArray) => {
+    try {
+      const res = db.transaction(async () => {
+        const promiseArray = []
+        paramsArray.forEach((params) => {
+          const item = this.update(params)
+          promiseArray.push(item)
+        })
+        const r = await Promise.all(promiseArray)
+        return r
+      })
+      return res
     } catch (error) {
       throw error
     }
@@ -70,8 +96,8 @@ export class DatabaseTable {
       this.columns.validate(data)
       const sql = this.getState().where`${sq.raw(`${this.pkey}`)} = ${pkeyValue}`.delete.query
       const res = await db.query(sql.text, sql.args)
-      if (res.rowCount > 0) return 200 // TODO: errorhandler
-      return 400
+      if (res.rowCount === 0) throw new errors.DeleteFailedError()
+      return pkeyValue
     } catch (error) {
       throw error
     }
