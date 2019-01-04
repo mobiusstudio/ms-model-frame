@@ -58,10 +58,14 @@ export class DbManager {
     const currentVer = await this.getCurrentVersion()
     const clusters = fs.readdirSync(patchMainPath)
     const patchFolders = []
+    // eslint-disable-next-line no-restricted-syntax
     for (const c of clusters) {
+      // eslint-disable-next-line no-continue
       if (c.charAt(0) === '.') continue
       const folders = fs.readdirSync(path.join(patchMainPath, c))
+      // eslint-disable-next-line no-restricted-syntax
       for (const f of folders) {
+        // eslint-disable-next-line no-continue
         if (f.charAt(0) === '.') continue
         const ver = Number.parseFloat(f)
         if (ver > currentVer) {
@@ -69,9 +73,7 @@ export class DbManager {
         }
       }
     }
-    patchFolders.sort((a, b) => {
-      return a[0] - b[0]
-    })
+    patchFolders.sort((a, b) => a[0] - b[0])
     return patchFolders
   }
 
@@ -87,22 +89,30 @@ export class DbManager {
     await this.createDbIfNotExists()
     const patchFolders = await this.getPatchFolders()
     await db.transaction(async (client) => {
+      // eslint-disable-next-line no-restricted-syntax
       for (const patchFolder of patchFolders) {
         const patchVer = patchFolder[0]
         const patchPath = patchFolder[1]
+        // eslint-disable-next-line no-await-in-loop
         const ver = await this.getCurrentVersion()
+        // eslint-disable-next-line no-continue
         if (patchVer <= ver) continue
         const files = fs.readdirSync(patchPath)
         if (files.includes('update.js')) {
-          const updatorPath = '.' + path.join(patchPath, 'update.js').slice(__dirname.length)
+          const updatorPath = `.${path.join(patchPath, 'update.js').slice(__dirname.length)}`
+          // eslint-disable-next-line import/no-dynamic-require
           const updator = require(updatorPath)
+          // eslint-disable-next-line no-await-in-loop
           await updator.putPatch(client)
         } else if (files.includes('query.sql')) {
           const query = fs.readFileSync(path.join(patchPath, 'query.sql'), 'utf8')
+          // eslint-disable-next-line no-await-in-loop
           await client.query(query)
         } else {
+          // eslint-disable-next-line no-continue
           continue
         }
+        // eslint-disable-next-line no-await-in-loop
         await this.updateVersion(client, patchVer)
       }
     })

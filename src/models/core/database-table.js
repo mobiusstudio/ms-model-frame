@@ -31,6 +31,23 @@ export class DatabaseTable {
     }
   }
 
+  batchAdd = async (dataArray) => {
+    try {
+      const res = db.transaction(async () => {
+        const promiseArray = []
+        dataArray.forEach((data) => {
+          const item = this.add(data)
+          promiseArray.push(item)
+        })
+        const r = await Promise.all(promiseArray)
+        return r
+      })
+      return res
+    } catch (error) {
+      throw error
+    }
+  }
+
   update = async (data, pkeyValue) => {
     try {
       this.columns.validate(data)
