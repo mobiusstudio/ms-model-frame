@@ -105,13 +105,13 @@ describe('========== SELECT / JOIN / GROUP BY ==========', () => {
         { key: 'tag', symbol: '@>', value: ['a', 'b', 'c'] },
       ],
       orderBy: [
-        { by: 'key1', sort: 'desc' },
-        { by: 'key2', sort: 'asc' },
-        { by: 'key3' },
+        { by: 'key_1', sort: 'desc' },
+        { by: 'key_2', sort: 'asc' },
+        { by: 'key_3' },
       ],
     }
     const query = question.from().paging(pkey, params).sql
-    query.text.should.equal('select * from "library".question where (id > $1) and (content LIKE $2) and (tag @> $3) order by key1 desc, key2 asc, key3 limit $4 offset $5')
+    query.text.should.equal('select * from "library".question where (id > $1) and (content LIKE $2) and (tag @> $3) order by key_1 desc, key_2 asc, key_3 limit $4 offset $5')
     query.args[0].should.equal(1000)
     query.args[1].should.equal('%资料%')
     query.args[2][0].should.equal('a')

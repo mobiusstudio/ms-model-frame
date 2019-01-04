@@ -51,7 +51,7 @@ export class Table {
     let newState = state
     filters.forEach((item) => {
       if (!symbols.includes(item.symbol)) throw new errors.InvalidFilterSymbolError(item.symbol)
-      newState = newState.where`${sq.raw(`${item.key}`)} ${sq.raw(`${item.symbol}`)} ${item.value}`
+      newState = newState.where`${sq.raw(`${snakeCase(item.key)}`)} ${sq.raw(`${item.symbol}`)} ${item.value}`
     })
     return newState
   }
@@ -66,7 +66,9 @@ export class Table {
     const count = state.return('count(*)').query
     if (orderBy && orderBy.length > 0) {
       orderBy.forEach((item) => {
-        state = state.orderBy(item)
+        const newItem = item
+        newItem.by = snakeCase(newItem.by)
+        state = state.orderBy(newItem)
       })
     }
     if (typeof page === 'number') { // page type
