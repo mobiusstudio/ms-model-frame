@@ -59,32 +59,52 @@ export class Table {
   paging = (pkey, params) => {
     const { page, next, filters, orderBy } = params
     const pagesize = params.pagesize || 10
-    let state
-    if (typeof page === 'number') { // page type
-      state = this.state.limit(pagesize).offset(page * pagesize)
-    } else if (typeof next === 'number') { // next type
-      state = this.state.limit(pagesize).where`${sq.raw(`${pkey}`)} < ${next}`
-    }
+    let { state } = this
     if (filters) {
       state = this.filter(state, filters)
     }
+    const count = state.return('count(*)').query
     if (orderBy && orderBy.length > 0) {
       orderBy.forEach((item) => {
         state = state.orderBy(item)
       })
     }
-    return new Table(state, this.columns)
+    if (typeof page === 'number') { // page type
+      state = state.limit(pagesize).offset(page * pagesize)
+    } else if (typeof next === 'number') { // next type
+      state = state.limit(pagesize).where`${sq.raw(`${pkey}`)} < ${next}`
+    }
+    const sql = state.query
+    return {
+      count,
+      sql,
+    }
   }
 
-  do = async () => {
+  do = async (paging) => {
     try {
-      const sql = this.state.query
-      const res = await db.query(sql.text, sql.args)
-      if (res.rowCount > 0) {
-        const newRes = res.rows.map(item => mapKeys(item, (value, key) => camelCase(key)))
-        return newRes
+      if (paging) {
+        const { count, sql } = this.paging(paging.pkey, paging.params)
+        const countRes = await db.query(count.text, count.args)
+        if (countRes.rowCount < 1) return { total: 0, items: [] }
+        const total = countRes.rows[0].count
+        const itemsRes = await db.query(sql.text, sql.args)
+        if (itemsRes.rowCount < 1) return { total: 0, items: [] }
+        const items = itemsRes.rows.map(item => mapKeys(item, (value, key) => camelCase(key)))
+        return {
+          total,
+          items,
+        }
       }
-      return null
+      {
+        const sql = this.state.query
+        const res = await db.query(sql.text, sql.args)
+        if (res.rowCount > 0) {
+          const newRes = res.rows.map(item => mapKeys(item, (value, key) => camelCase(key)))
+          return newRes
+        }
+      }
+      return []
     } catch (error) {
       throw error
     }

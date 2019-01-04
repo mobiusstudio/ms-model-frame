@@ -110,7 +110,7 @@ describe('========== SELECT / JOIN / GROUP BY  ==========', () => {
         { by: 'key3' },
       ],
     }
-    const { query } = question.from().paging(pkey, params).state
+    const query = question.from().paging(pkey, params).sql
     query.text.should.equal('select * from "library".question where (id > $1) and (content LIKE $2) and (tag @> $3) order by key1 desc, key2 asc, key3 limit $4 offset $5')
     query.args[0].should.equal(1000)
     query.args[1].should.equal('%资料%')

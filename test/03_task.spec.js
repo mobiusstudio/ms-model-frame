@@ -50,9 +50,13 @@ describe('========== TASK ==========', () => {
       ],
     }
     try {
-      const res = await task.from().paging('id', params).do()
-      res.length.should.equal(3)
-      res[0].id.should.equal(203388799060006)
+      const res = await task.from().do({
+        pkey: 'id',
+        params,
+      })
+      res.total.should.equal(5)
+      res.items.length.should.equal(3)
+      res.items[0].id.should.equal(203388799060006)
     } catch (error) {
       throw error
     }
