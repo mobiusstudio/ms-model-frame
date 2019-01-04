@@ -24,13 +24,13 @@ export class DatabaseTable {
 
   from = () => new Table(this.getState(), this.columns)
 
-  add = async (data) => {
+  add = async (data, client = db) => {
     try {
       this.columns.validate(data)
       const newData = mapKeys(data, (value, key) => snakeCase(key))
       delete newData[this.pkey]
       const sql = this.getState().insert(newData).return(this.pkey).query
-      const res = await db.query(sql.text, sql.args)
+      const res = await client.query(sql.text, sql.args)
       if (res.rowCount === 0) throw new errors.AddFailedError()
       return res.rows[0].id
     } catch (error) {
@@ -40,14 +40,14 @@ export class DatabaseTable {
 
   batchAdd = async (dataArray) => {
     try {
-      const res = db.transaction(async () => {
+      const res = db.transaction(async (client) => {
         const promiseArray = []
         dataArray.forEach((data) => {
-          const item = this.add(data)
+          const item = this.add(data, client)
           promiseArray.push(item)
         })
-        const r = await Promise.all(promiseArray)
-        return r
+        const resultArray = await Promise.all(promiseArray)
+        return resultArray
       })
       return res
     } catch (error) {
@@ -55,7 +55,7 @@ export class DatabaseTable {
     }
   }
 
-  update = async ({ data, pkeyValue }) => {
+  update = async ({ data, pkeyValue }, client = db) => {
     try {
       const tempData = data
       tempData[`${this.pkey}`] = pkeyValue
@@ -63,7 +63,7 @@ export class DatabaseTable {
       const newData = mapKeys(data, (value, key) => snakeCase(key))
       delete newData[this.pkey]
       const sql = this.getState().where`${sq.raw(`${this.pkey}`)} = ${pkeyValue}`.set(newData).query
-      const res = await db.query(sql.text, sql.args)
+      const res = await client.query(sql.text, sql.args)
       if (res.rowCount === 0) throw new errors.UpdateFailedError()
       return pkeyValue
     } catch (error) {
@@ -73,14 +73,14 @@ export class DatabaseTable {
 
   batchUpdate = async (paramsArray) => {
     try {
-      const res = db.transaction(async () => {
+      const res = db.transaction(async (client) => {
         const promiseArray = []
         paramsArray.forEach((params) => {
-          const item = this.update(params)
+          const item = this.update(params, client)
           promiseArray.push(item)
         })
-        const r = await Promise.all(promiseArray)
-        return r
+        const resultArray = await Promise.all(promiseArray)
+        return resultArray
       })
       return res
     } catch (error) {
@@ -88,21 +88,35 @@ export class DatabaseTable {
     }
   }
 
-  delete = async (pkeyValue) => {
+  delete = async (pkeyValue, client = db) => {
     try {
       const data = {
         [`${this.pkey}`]: pkeyValue,
       }
       this.columns.validate(data)
       const sql = this.getState().where`${sq.raw(`${this.pkey}`)} = ${pkeyValue}`.delete.query
-      const res = await db.query(sql.text, sql.args)
-      if (res.rowCount === 0) throw new errors.DeleteFailedError()
+      const res = await client.query(sql.text, sql.args)
+      if (res.rowCount === 0) throw new errors.DeleteFaildError()
       return pkeyValue
     } catch (error) {
       throw error
     }
   }
 
-  // TODO: batchAdd
-  // TODO: batchDelete
+  batchDelete = async (pkeyArray) => {
+    try {
+      const res = db.transaction(async (client) => {
+        const promiseArray = []
+        pkeyArray.forEach((pkeyValue) => {
+          const item = this.delete(pkeyValue, client)
+          promiseArray.push(item)
+        })
+        const resultArray = await Promise.all(promiseArray)
+        return resultArray
+      })
+      return res
+    } catch (error) {
+      throw error
+    }
+  }
 }
