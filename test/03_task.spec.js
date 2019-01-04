@@ -37,6 +37,27 @@ describe('========== TASK ==========', () => {
     }
   })
 
+  it('paging', async () => {
+    const params = {
+      page: 0,
+      pagesize: 3,
+      filters: [
+        { key: 'id', symbol: '>', value: 203388799060001 },
+        { key: 'content', symbol: 'LIKE', value: '%task%' },
+      ],
+      orderBy: [
+        { by: 'id', sort: 'desc' },
+      ],
+    }
+    try {
+      const res = await task.from().paging('id', params).do()
+      res.length.should.equal(3)
+      res[0].id.should.equal(203388799060006)
+    } catch (error) {
+      throw error
+    }
+  })
+
   it('update', async () => {
     try {
       const res = await task.update(taskDataUpdate, taskId)
