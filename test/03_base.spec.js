@@ -88,10 +88,7 @@ describe('========== Base ==========', () => {
       ],
     }
     try {
-      const res = await task.from().do({
-        pkey: 'id',
-        params,
-      })
+      const res = await task.from().do(params)
       res.total.should.equal(5)
       res.items.length.should.equal(3)
       res.items[0].id.should.equal(203388799060006)

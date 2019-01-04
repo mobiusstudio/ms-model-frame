@@ -94,11 +94,11 @@ describe('========== SELECT / JOIN / GROUP BY ==========', () => {
 
   it('paging', () => {
     const question = new Question()
-    const pkey = 'id'
     const params = {
       page: 10,
       pagesize: 20,
       next: 15,
+      nextKey: 'id',
       filters: [
         { key: 'id', symbol: '>', value: 1000 },
         { key: 'content', symbol: 'LIKE', value: '%资料%' },
@@ -110,7 +110,7 @@ describe('========== SELECT / JOIN / GROUP BY ==========', () => {
         { by: 'key_3' },
       ],
     }
-    const query = question.from().paging(pkey, params).sql
+    const query = question.from().paging(params).sql
     query.text.should.equal('select * from "library".question where (id > $1) and (content LIKE $2) and (tag @> $3) order by key_1 desc, key_2 asc, key_3 limit $4 offset $5')
     query.args[0].should.equal(1000)
     query.args[1].should.equal('%资料%')

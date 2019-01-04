@@ -4,6 +4,7 @@ import { sq } from './sq'
 
 errors.register({
   InvalidFilterSymbol: 400,
+  InvalidNextKey: 400,
 })
 
 export class Table {
@@ -56,8 +57,8 @@ export class Table {
     return newState
   }
 
-  paging = (pkey, params) => {
-    const { page, next, filters, orderBy } = params
+  paging = (params) => {
+    const { page, next, nextKey, filters, orderBy } = params
     const pagesize = params.pagesize || 10
     let { state } = this
     if (filters) {
@@ -74,7 +75,8 @@ export class Table {
     if (typeof page === 'number') { // page type
       state = state.limit(pagesize).offset(page * pagesize)
     } else if (typeof next === 'number') { // next type
-      state = state.limit(pagesize).where`${sq.raw(`${pkey}`)} < ${next}`
+      if (!nextKey || typeof nextKey !== 'string') throw new errors.InvalidNextKeyError(nextKey)
+      state = state.limit(pagesize).where`${sq.raw(`${snakeCase(nextKey)}`)} < ${next}`
     }
     const sql = state.query
     return {
@@ -83,10 +85,10 @@ export class Table {
     }
   }
 
-  do = async (paging) => {
+  do = async (pagingParams) => {
     try {
-      if (paging) {
-        const { count, sql } = this.paging(paging.pkey, paging.params)
+      if (pagingParams) {
+        const { count, sql } = this.paging(pagingParams)
         const countRes = await db.query(count.text, count.args)
         if (countRes.rowCount < 1) return { total: 0, items: [] }
         const total = countRes.rows[0].count
