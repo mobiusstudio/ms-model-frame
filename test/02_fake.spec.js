@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { sqlizeListParams } from '../src/utils'
 
-describe('========== FAKE DATA  ==========', () => {
+describe('========== FAKE DATA ==========', () => {
   it('create', async () => {
     const dataPath = path.join(__dirname, './mock/data')
     const files = fs.readdirSync(dataPath)
@@ -32,7 +32,7 @@ describe('========== FAKE DATA  ==========', () => {
   })
 })
 
-describe('========== LIST PARAMS  ==========', () => {
+describe('========== LIST PARAMS ==========', () => {
   it('filter', () => {
     const params = {
       filters: ['wow LIKE \'%TEMP%\'', 'userId >= 1', 'userName = \'Lily\'', 'users @> array[1]'],
