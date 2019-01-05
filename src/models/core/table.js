@@ -76,7 +76,7 @@ export class Table {
       state = state.limit(pagesize).offset(page * pagesize)
     } else if (typeof next === 'number') { // next type
       if (!nextKey || typeof nextKey !== 'string') throw new errors.InvalidNextKeyError(nextKey)
-      state = state.limit(pagesize).where`${sq.raw(`${snakeCase(nextKey)}`)} < ${next}`
+      state = state.limit(pagesize).where`${sq.raw(`${snakeCase(nextKey)}`)} > ${next}`
     }
     const sql = state.query
     return {
