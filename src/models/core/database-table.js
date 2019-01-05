@@ -7,7 +7,7 @@ import errors from '../../errors'
 errors.register({
   AddFailed: 400,
   UpdateFailed: 400,
-  DeleteFaild: 400,
+  DeleteFailed: 400,
 })
 
 export class DatabaseTable {
@@ -64,7 +64,7 @@ export class DatabaseTable {
       delete newData[this.pkey]
       const sql = this.getState().where`${sq.raw(`${this.pkey}`)} = ${pkeyValue}`.set(newData).query
       const res = await client.query(sql.text, sql.args)
-      if (res.rowCount === 0) throw new errors.UpdateFailedError()
+      if (res.rowCount === 0) throw new errors.UpdateFailedError(`${pkeyValue}`)
       return pkeyValue
     } catch (error) {
       throw error
@@ -96,7 +96,7 @@ export class DatabaseTable {
       this.columns.validate(data)
       const sql = this.getState().where`${sq.raw(`${this.pkey}`)} = ${pkeyValue}`.delete.query
       const res = await client.query(sql.text, sql.args)
-      if (res.rowCount === 0) throw new errors.DeleteFaildError()
+      if (res.rowCount === 0) throw new errors.DeleteFailedError(`${pkeyValue}`)
       return pkeyValue
     } catch (error) {
       throw error
