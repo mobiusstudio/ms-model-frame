@@ -19,7 +19,7 @@ export class Task extends DatabaseTable {
       }),
       new Column({
         name: 'content',
-        alias: 'task_content',
+        alias: 'taskContent',
         type: 'string',
       }),
       new Column({
