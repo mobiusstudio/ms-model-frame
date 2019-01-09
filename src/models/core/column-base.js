@@ -1,12 +1,14 @@
 import Joi from 'joi'
 
 export class BaseColumn {
-  constructor({ name, alias, foreign, table, type }) {
+  constructor({ name, alias, foreign, table, type, def = null, required = false }) {
     this.name = name
     this.foreign = foreign
     this.alias = alias
     this.table = table
     this.type = type
+    this.def = def
+    this.required = required
   }
 
   static getRule(type) {

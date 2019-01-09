@@ -8,10 +8,12 @@ export class Task extends DatabaseTable {
         name: 'id',
         alias: 'taskId',
         type: 'id',
+        required: true,
       }),
       new Column({
         name: 'isCompleted',
         type: 'boolean',
+        def: false,
       }),
       new Column({
         name: 'title',

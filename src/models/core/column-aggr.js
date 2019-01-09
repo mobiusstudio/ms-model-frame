@@ -3,8 +3,8 @@ import { BaseColumn } from './column-base'
 
 export class AggrColumn extends BaseColumn {
   constructor(aggrType, alias, column) {
-    const { name, foreign, table, rule } = column
-    super({ name, alias, foreign, table, rule })
+    const { name, foreign, table, type, def, required } = column
+    super({ name, alias, foreign, table, type, def, required })
     this.aggrType = aggrType
   }
 
