@@ -39,7 +39,6 @@ export class DbManager {
   }
 
   async getCurrentVersion() {
-
     const queryCheck = `
       SELECT 1 AS exists FROM pg_class WHERE relname = 'version';
     `
