@@ -1,8 +1,8 @@
 {
   "database": {
     "postgres": {
-      "bip": {
-        "db": "bip-test",
+      "ymir": {
+        "db": "ymir-test",
         "host": "47.91.244.93",
         "port": 5432,
         "credentials": {
