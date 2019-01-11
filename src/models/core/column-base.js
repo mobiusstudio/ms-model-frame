@@ -2,11 +2,11 @@ import Joi from 'joi'
 
 export class BaseColumn {
   constructor({ name, alias, foreign, table, type, def = null, required = false }) {
+    this.table = table
     this.name = name
+    this.type = type
     this.foreign = foreign
     this.alias = alias
-    this.table = table
-    this.type = type
     this.def = def
     this.required = required
   }
