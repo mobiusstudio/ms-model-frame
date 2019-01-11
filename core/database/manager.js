@@ -89,7 +89,6 @@ export class DbManager {
     await db.transaction(async (client) => {
       const ver = await this.getCurrentVersion()
       for (const patchFile of patchFiles) {
-        console.log('patch file', patchFile)
         const patchVer = patchFile.version
         if (patchVer > ver) {
           const query = fs.readFileSync(patchFile.path, 'utf8')
