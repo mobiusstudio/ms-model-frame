@@ -1,4 +1,4 @@
-import { DatabaseTable, Column, ColumnArray } from './core'
+import { DatabaseTable, Column, ColumnArray } from '../../core/model'
 
 export class Task extends DatabaseTable {
   constructor() {

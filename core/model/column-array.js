@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import { snakeCase } from 'lodash'
 import { BaseColumn } from './column-base'
-import errors from '../../errors'
+import errors from '../errors'
 
 errors.register({
   ValidateFailed: 400,

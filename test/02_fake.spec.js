@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { sqlizeListParams } from '../src/utils'
+import { sqlizeListParams } from '../core/utils'
 
 describe('========== FAKE DATA ==========', () => {
   it('create', async () => {

@@ -2,7 +2,7 @@ import { snakeCase, mapKeys } from 'lodash'
 import { Table } from './table'
 import { ColumnArray } from './column-array'
 import { sq } from './sq'
-import errors from '../../errors'
+import errors from '../errors'
 
 errors.register({
   AddFailed: 400,

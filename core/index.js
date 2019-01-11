@@ -1,5 +1,6 @@
-import * as models from './models'
-import { db, errors, coreModels } from '../core'
+import * as coreModels from './model'
+import errors from './errors'
+import db from './database'
 
 global.db = db
 
@@ -9,5 +10,4 @@ export const configure = async (options) => {
   return res
 }
 
-export { errors }
-export default { ...models, ...coreModels }
+export { errors, db, coreModels }
