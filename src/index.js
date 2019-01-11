@@ -1,7 +1,5 @@
 import * as models from './models'
-import * as coreModels from '../core/model'
-import errors from '../core/errors'
-import db from '../core/database'
+import { db, errors, coreModels } from '../core'
 
 global.db = db
 

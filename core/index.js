@@ -10,5 +10,4 @@ export const configure = async (options) => {
   return res
 }
 
-export { errors }
-export default coreModels
+export { errors, db, coreModels }
