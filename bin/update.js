@@ -1,5 +1,5 @@
 import log4js from 'log4js'
-import options from '../test/config/config.json'
+import options from '../src/config/config.json'
 import { configure } from '../src'
 
 const log = log4js.getLogger()
@@ -7,9 +7,9 @@ const log = log4js.getLogger()
 async function update() {
   const dbManager = await configure(options)
   const version = await dbManager.getCurrentVersion()
-  log.info(`Before update db version: ${version}`)
+  console.info(`Before update db version: ${version}`)
   await dbManager.update()
-  log.info(`After update db version: ${dbManager.version}`)
+  console.info(`After update db version: ${dbManager.version}`)
 }
 
 update().catch((err) => {

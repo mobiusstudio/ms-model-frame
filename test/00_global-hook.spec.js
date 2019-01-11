@@ -3,7 +3,7 @@ import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import log4js from 'log4js'
 import models, { configure } from '../src'
-import options from './config/config.json'
+import options from '../src/config/config.json'
 
 const log = log4js.getLogger()
 chai.use(chaiAsPromised)

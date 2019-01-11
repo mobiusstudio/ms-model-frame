@@ -62,6 +62,7 @@ const config = {
         loader: 'babel-loader',
         include: [
           path.resolve(__dirname, '../src'),
+          path.resolve(__dirname, '../core'),
         ],
       },
       {
@@ -74,6 +75,7 @@ const config = {
   resolve: {
     modules: [
       path.resolve(__dirname, '../src'),
+      path.resolve(__dirname, '../core'),
       'node_modules',
     ],
     extensions: ['.webpack.js', '.js', '.json'],

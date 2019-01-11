@@ -1,5 +1,5 @@
 import { camelCase, snakeCase, mapKeys } from 'lodash'
-import errors from '../../errors'
+import errors from '../errors'
 import { sq } from './sq'
 
 errors.register({

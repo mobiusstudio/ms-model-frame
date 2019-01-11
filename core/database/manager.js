@@ -1,3 +1,6 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
 import fs from 'fs'
 import path from 'path'
 
@@ -36,6 +39,7 @@ export class DbManager {
   }
 
   async getCurrentVersion() {
+
     const queryCheck = `
       SELECT 1 AS exists FROM pg_class WHERE relname = 'version';
     `
@@ -50,31 +54,26 @@ export class DbManager {
     }
     const currentVer = resultVersion.rows[0].ver
     this.version = currentVer
+
     return currentVer
   }
 
-  async getPatchFolders() {
-    const patchMainPath = path.join(__dirname, 'patches')
+  async getPatchFiles() {
+    const patchPath = path.join(__dirname, '../../src/database/patches')
     const currentVer = await this.getCurrentVersion()
-    const clusters = fs.readdirSync(patchMainPath)
-    const patchFolders = []
-    // eslint-disable-next-line no-restricted-syntax
-    for (const c of clusters) {
+    const files = fs.readdirSync(patchPath)
+    const patchFiles = []
+    files.forEach((file) => {
       // eslint-disable-next-line no-continue
-      if (c.charAt(0) === '.') continue
-      const folders = fs.readdirSync(path.join(patchMainPath, c))
-      // eslint-disable-next-line no-restricted-syntax
-      for (const f of folders) {
-        // eslint-disable-next-line no-continue
-        if (f.charAt(0) === '.') continue
-        const ver = Number.parseFloat(f)
+      if (file.charAt(0) !== '.') {
+        const ver = Number.parseFloat(file.split('.')[0])
         if (ver > currentVer) {
-          patchFolders.push([ver, path.join(patchMainPath, c, f)])
+          patchFiles.push({ version: ver, path: path.join(patchPath, file) })
         }
       }
-    }
-    patchFolders.sort((a, b) => a[0] - b[0])
-    return patchFolders
+    })
+    patchFiles.sort((a, b) => a[0] - b[0])
+    return patchFiles
   }
 
   async updateVersion(client, patchVer) {
@@ -87,33 +86,17 @@ export class DbManager {
 
   async update() {
     await this.createDbIfNotExists()
-    const patchFolders = await this.getPatchFolders()
+    const patchFiles = await this.getPatchFiles()
     await db.transaction(async (client) => {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const patchFolder of patchFolders) {
-        const patchVer = patchFolder[0]
-        const patchPath = patchFolder[1]
-        // eslint-disable-next-line no-await-in-loop
-        const ver = await this.getCurrentVersion()
-        // eslint-disable-next-line no-continue
-        if (patchVer <= ver) continue
-        const files = fs.readdirSync(patchPath)
-        if (files.includes('update.js')) {
-          const updatorPath = `.${path.join(patchPath, 'update.js').slice(__dirname.length)}`
-          // eslint-disable-next-line import/no-dynamic-require
-          const updator = require(updatorPath)
-          // eslint-disable-next-line no-await-in-loop
-          await updator.putPatch(client)
-        } else if (files.includes('query.sql')) {
-          const query = fs.readFileSync(path.join(patchPath, 'query.sql'), 'utf8')
-          // eslint-disable-next-line no-await-in-loop
+      const ver = await this.getCurrentVersion()
+      for (const patchFile of patchFiles) {
+        console.log('patch file', patchFile)
+        const patchVer = patchFile.version
+        if (patchVer > ver) {
+          const query = fs.readFileSync(patchFile.path, 'utf8')
           await client.query(query)
-        } else {
-          // eslint-disable-next-line no-continue
-          continue
+          await this.updateVersion(client, patchVer)
         }
-        // eslint-disable-next-line no-await-in-loop
-        await this.updateVersion(client, patchVer)
       }
     })
   }
