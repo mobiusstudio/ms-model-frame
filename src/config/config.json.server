@@ -1,8 +1,8 @@
 {
   "database": {
     "postgres": {
-      "ymir": {
-        "db": "ymir-test",
+      "ymirf": {
+        "db": "ymirf-test",
         "host": "47.91.244.93",
         "port": 5432,
         "credentials": {
