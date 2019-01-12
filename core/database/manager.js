@@ -58,7 +58,7 @@ export class DbManager {
   }
 
   async getPatchFiles() {
-    const patchPath = path.join(__dirname, '../../src/database/patches')
+    const patchPath = path.join(__dirname, 'patches')
     const currentVer = await this.getCurrentVersion()
     const files = fs.readdirSync(patchPath)
     const patchFiles = []
