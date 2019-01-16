@@ -29,7 +29,7 @@ export class Table {
     const state = this.state.join(`"${snakeCase(dt.schemaName)}".${snakeCase(dt.tableName)}`)
       .on(ons)
     const columns = this.columns.concat(dt.columns)
-    return new Table(state, columns)
+    return new Table(state, columns) // TODO: return this
   }
 
   groupBy = (columns, aggrColumns) => {
@@ -37,13 +37,13 @@ export class Table {
     const state = this.state.groupBy(columns.map(column => column.sqlize()))
       .return(newColumns.objlize())
 
-    return new Table(state, newColumns)
+    return new Table(state, newColumns) // TODO: return this
   }
 
   select = (columns = null) => {
     const newColumns = columns || this.columns
     const state = this.state.return(newColumns.objlize())
-    return new Table(state, newColumns)
+    return new Table(state, newColumns) // TODO: return this
   }
 
   filter = (state, filters) => {
