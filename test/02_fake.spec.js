@@ -1,6 +1,5 @@
 import fs from 'fs'
 import path from 'path'
-import { sqlizeListParams } from '../core/utils'
 
 describe('========== FAKE DATA ==========', () => {
   it('create', async () => {
@@ -29,34 +28,5 @@ describe('========== FAKE DATA ==========', () => {
       item.create_time.should.equal(parseInt(`151600827001${index + 1}`, 10))
       item.last_update_time.should.equal(parseInt(`151600827002${index + 1}`, 10))
     })
-  })
-})
-
-describe('========== LIST PARAMS ==========', () => {
-  it('filter', () => {
-    const params = {
-      filters: ['wow LIKE \'%TEMP%\'', 'userId >= 1', 'userName = \'Lily\'', 'users @> array[1]'],
-    }
-    const string = sqlizeListParams('id', params)
-    string.should.equal(' WHERE wow LIKE \'%TEMP%\' AND user_id >= 1 AND user_name = \'Lily\' AND users @> array[1] ORDER BY id DESC ')
-  })
-
-  it('count', () => {
-    const params = {
-      next: 100,
-      pagesize: 1,
-      orderBy: 'id desc',
-    }
-    const str = sqlizeListParams('id', params, true)
-    str.should.equal('   ')
-  })
-
-  it('order by', () => {
-    const params = {
-      pagesize: 10,
-      orderBy: 'id desc',
-    }
-    const string = sqlizeListParams('id', params)
-    string.should.equal('  ORDER BY id DESC LIMIT 10')
   })
 })

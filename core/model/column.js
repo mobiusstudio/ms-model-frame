@@ -25,7 +25,7 @@ export class Column extends ColumnBase {
     })
   }
 
-  sqlize = () => `"${snakeCase(this.schemaName)}"${snakeCase(this.tableName)}.${snakeCase(this.name)}`
+  sqlize = () => `${snakeCase(this.tableName)}.${snakeCase(this.name)}`
 
   aggr = (aggrType, alias) => {
     const res = new ColumnAggr(aggrType, alias, this)

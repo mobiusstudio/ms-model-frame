@@ -33,6 +33,7 @@ export class ColumnBase {
       this.required = required
       this.default = def
     } else {
+      console.log(result.error)
       throw new Error('Invalid column data')
     }
   }
@@ -62,20 +63,20 @@ export class TableBase {
   }
 }
 
-export class SchemaBase {
-  constructor({
-    schemaName,
-    tables = [],
-  }) {
-    const result = joi.validate({
-      schemaName,
-      tables,
-    }, joi.object().keys(schemaRules.schema))
-    if (!result.error) {
-      this.schemaName = schemaName
-      this.tables = tables
-    } else {
-      throw new Error('Invalid schema data')
-    }
-  }
-}
+// export class SchemaBase {
+//   constructor({
+//     schemaName,
+//     tables = [],
+//   }) {
+//     const result = joi.validate({
+//       schemaName,
+//       tables,
+//     }, joi.object().keys(schemaRules.schema))
+//     if (!result.error) {
+//       this.schemaName = schemaName
+//       this.tables = tables
+//     } else {
+//       throw new Error('Invalid schema data')
+//     }
+//   }
+// }

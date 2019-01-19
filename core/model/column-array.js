@@ -9,7 +9,11 @@ errors.register({
 })
 
 export class ColumnArray {
-  constructor(schemaName, tableName, items) {
+  constructor({
+    schemaName,
+    tableName,
+    items,
+  }) {
     this.items = items.map((item) => {
       const {
         type,

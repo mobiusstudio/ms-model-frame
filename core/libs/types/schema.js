@@ -14,12 +14,12 @@ export const schemaRules = {
     alias: joi.string().allow(null),
     foreign: joi.string().allow(null),
     required: joi.boolean().allow(null),
-    default: joi.any().valid([
+    default: joi.alternatives().try(
       joi.number(),
       joi.string(),
       joi.boolean(),
       joi.array(),
-    ]),
+    ).allow(null),
   },
   table: {
     schemaName,

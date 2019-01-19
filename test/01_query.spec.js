@@ -1,42 +1,50 @@
-const { DatabaseTable, ColumnArray, Column } = global.models
+const { DatabaseTable, ColumnArray } = global.models
 
 class Question extends DatabaseTable {
   constructor() {
-    super('library', 'question')
-    this.columns = new ColumnArray([
-      new Column({
-        name: 'id',
-        alias: 'questionId',
-        type: 'id',
-      }),
-      new Column({
-        name: 'content',
-        table: 'question',
-        type: 'string',
-      }),
-      new Column({
-        name: 'answerId',
-        foreign: 'answer',
-        type: 'id',
-      }),
-    ], this.tableName)
+    super({
+      schemaName: 'library',
+      tableName: 'question',
+      pkeyIndex: 0,
+      columns: [
+        {
+          name: 'id',
+          alias: 'questionId',
+          type: 'id',
+        },
+        {
+          name: 'content',
+          table: 'question',
+          type: 'string',
+        },
+        {
+          name: 'answerId',
+          foreign: 'answer',
+          type: 'id',
+        },
+      ],
+    })
   }
 }
 
 class Answer extends DatabaseTable {
   constructor() {
-    super('library', 'answer')
-    this.columns = new ColumnArray([
-      new Column({
-        name: 'id',
-        alias: 'answerId',
-        type: 'id',
-      }),
-      new Column({
-        name: 'description',
-        type: 'id',
-      }),
-    ], this.tableName)
+    super({
+      schemaName: 'library',
+      tableName: 'answer',
+      pkeyIndex: 0,
+      columns: [
+        {
+          name: 'id',
+          alias: 'answerId',
+          type: 'id',
+        },
+        {
+          name: 'description',
+          type: 'id',
+        },
+      ],
+    })
   }
 }
 
