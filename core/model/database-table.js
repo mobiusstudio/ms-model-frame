@@ -29,10 +29,11 @@ export class DatabaseTable {
       this.columns.validate(data)
       const newData = mapKeys(data, (value, key) => snakeCase(key))
       delete newData[this.pkey]
-      const sql = this.getState().insert(newData).return(this.pkey).query
+      // const sql = this.getState().insert(newData).return(this.pkey).query
+      const sql = this.getState().insert(newData).return('*').query
       const res = await client.query(sql.text, sql.args)
       if (res.rowCount === 0) throw new errors.AddFailedError()
-      return res.rows[0].id
+      return res.rows[0]
     } catch (error) {
       throw error
     }
@@ -62,10 +63,10 @@ export class DatabaseTable {
       this.columns.validate(tempData)
       const newData = mapKeys(data, (value, key) => snakeCase(key))
       delete newData[this.pkey]
-      const sql = this.getState().where`${sq.raw(`${this.pkey}`)} = ${pkeyValue}`.set(newData).query
+      const sql = this.getState().where`${sq.raw(`${this.pkey}`)} = ${pkeyValue}`.set(newData).return('*').query
       const res = await client.query(sql.text, sql.args)
       if (res.rowCount === 0) throw new errors.UpdateFailedError(`${pkeyValue}`)
-      return pkeyValue
+      return res.rows[0]
     } catch (error) {
       throw error
     }
