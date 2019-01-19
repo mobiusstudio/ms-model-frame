@@ -68,17 +68,9 @@ export class Rul {
     this.rul = rul
   }
 
-  default = (value) => {
-    this.rul = this.rul.default(value)
-  }
-
-  required = () => {
-    this.rul = this.rul.required
-  }
-
   torule = ({ req, def }) => {
-    if (req === true || req === 'true' || req === 1) this.required()
-    if (def !== undefined) this.default(def)
+    if (req === true || req === 'true' || req === 1) this.rul = this.rul.required()
+    if (def !== undefined) this.rul = this.rul.default(def)
     return this.rul
   }
 }

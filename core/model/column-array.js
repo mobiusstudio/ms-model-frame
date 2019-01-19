@@ -1,6 +1,6 @@
 import joi from 'joi'
 import { snakeCase } from 'lodash'
-import { types as T } from '../libs/types'
+import { typeMap as T } from '../libs/types'
 import { Column } from './column'
 import { ColumnAggr } from './column-aggr'
 import errors from '../errors'
@@ -48,7 +48,7 @@ export class ColumnArray {
     const obj = {}
     this.items.forEach((item) => {
       const { type, name, required: req, default: def } = item
-      obj[name] = T.get(type).rule({ req, def })
+      obj[name] = T.get(type).rul({ req, def })
     })
     const schema = joi.object().keys(obj)
     const result = joi.validate(data, schema)

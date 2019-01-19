@@ -1,6 +1,5 @@
 import { checkObject } from './utils'
-
-const { Task } = global.models
+import { Task } from './mock/models/task'
 
 const taskDataAdd = { isCompleted: true, title: 'test title', content: 'test content', deadline: 2147483656 }
 const taskDataUpdate = { isCompleted: false, title: 'test title 2', content: 'test content 2', deadline: 2147483656 }
@@ -14,7 +13,8 @@ describe('========== Base ==========', () => {
   it('add', async () => {
     try {
       const res = await task.add(taskDataAdd)
-      taskId = res
+      checkObject(res, taskDataAdd, task)
+      taskId = res.id
     } catch (error) {
       throw error
     }
@@ -24,8 +24,8 @@ describe('========== Base ==========', () => {
     try {
       const dataArray = [taskDataAdd, taskDataAdd, taskDataAdd]
       const res = await task.batchAdd(dataArray)
-      res.length.should.equal(dataArray.length)
-      taskIds = res
+      res.forEach(data => (checkObject(data, taskDataAdd, task)))
+      taskIds = res.map(data => data.id)
     } catch (error) {
       throw error
     }
@@ -37,7 +37,8 @@ describe('========== Base ==========', () => {
         data: taskDataUpdate,
         pkeyValue: taskId,
       })
-      res.should.equal(taskId)
+      checkObject(res, taskDataUpdate, task)
+      res.id.should.equal(taskId)
     } catch (error) {
       throw (error)
     }
@@ -51,7 +52,10 @@ describe('========== Base ==========', () => {
         { data: taskDataUpdate, pkeyValue: taskIds[2] },
       ]
       const res = await task.batchUpdate(paramsArray)
-      res.length.should.equal(taskIds.length)
+      res.forEach((data, index) => {
+        checkObject(data, taskDataUpdate, task)
+        data.id.should.equal(taskIds[index])
+      })
     } catch (error) {
       throw error
     }

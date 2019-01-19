@@ -1,4 +1,4 @@
-import { DatabaseTable } from '../../core/model'
+import { DatabaseTable } from '../../../core/model'
 
 export class Task extends DatabaseTable {
   constructor() {
@@ -11,12 +11,10 @@ export class Task extends DatabaseTable {
           name: 'id',
           alias: 'taskId',
           type: 'id',
-          required: true,
         },
         {
           name: 'isCompleted',
           type: 'boolean',
-          default: false,
         },
         {
           name: 'title',

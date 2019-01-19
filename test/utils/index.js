@@ -5,7 +5,7 @@ export const checkObject = (obj, data, model) => {
       if (item.name === key) newData[`${item.alias || item.name}`] = data[key]
     })
   })
-  Object.keys(data).forEach((key) => {
-    if (key !== model.pkey && newData[key]) obj[key].should.equal(newData[key])
+  Object.keys(data).forEach((key, index) => {
+    if (index !== model.pkeyIndex && newData[key]) obj[key].should.equal(newData[key])
   })
 }
