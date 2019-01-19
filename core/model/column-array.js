@@ -1,6 +1,7 @@
-import Joi from 'joi'
+import joi from 'joi'
 import { snakeCase } from 'lodash'
-import { BaseColumn } from './column-base'
+import { types as T } from '../libs/types'
+import { Column } from './column'
 import errors from '../errors'
 
 errors.register({
@@ -8,16 +9,27 @@ errors.register({
 })
 
 export class ColumnArray {
-  constructor(items, tableName = null) {
-    if (tableName && typeof tableName === 'string') {
-      this.items = items.map((item) => {
-        const obj = item
-        obj.table = tableName
-        return obj
+  constructor(schemaName, tableName, items) {
+    this.items = items.map((item) => {
+      const {
+        type,
+        name,
+        alias = null,
+        foreign = null,
+        required = false,
+        default: def = null,
+      } = item
+      return new Column({
+        schemaName,
+        tableName,
+        type,
+        name,
+        alias,
+        foreign,
+        required,
+        default: def,
       })
-    } else {
-      this.items = items
-    }
+    })
   }
 
   map = func => this.items.map(func)
@@ -29,10 +41,11 @@ export class ColumnArray {
   validate = (data) => {
     const obj = {}
     this.items.forEach((item) => {
-      obj[item.name] = typeof item.type === 'string' ? BaseColumn.getRule(item.type) : item.type
+      const { type, name, required: req, default: def } = item
+      obj[name] = T.get(type).rule({ req, def })
     })
-    const schema = Joi.object(obj)
-    const result = Joi.validate(data, schema)
+    const schema = joi.object().keys(obj)
+    const result = joi.validate(data, schema)
     if (result.error) {
       throw new errors.ValidateFailedError(result.error.details[0].message)
     }

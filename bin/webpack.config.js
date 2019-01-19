@@ -17,7 +17,7 @@ const compiledPackages = [
 const config = {
   context: path.resolve(__dirname, '../src'),
 
-  entry: ['@babel/polyfill', './index.js'],
+  entry: ['./index.js'],
 
   output: {
     path: path.resolve(__dirname, '../dist'),
@@ -30,7 +30,7 @@ const config = {
 
   externals: [
     function filter(context, request, cb) {
-      const isExternal = (compiledPackages.indexOf(request) === -1 && request.match(/^[a-z][a-z\/\.\-0-9]*$/i)) || request.match(/\.sql$/i)
+      const isExternal = (compiledPackages.indexOf(request) === -1 && request.match(/^[a-z][a-z/.\-0-9]*$/i)) || request.match(/\.sql$/i)
       cb(null, !!isExternal)
     },
   ],

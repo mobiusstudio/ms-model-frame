@@ -1,4 +1,5 @@
 import { snakeCase, mapKeys } from 'lodash'
+import { TableBase } from '../libs/schema/base'
 import { Table } from './table'
 import { ColumnArray } from './column-array'
 import { sq } from './sq'
@@ -10,17 +11,21 @@ errors.register({
   DeleteFailed: 400,
 })
 
-export class DatabaseTable {
-  constructor(schemaName, tableName) {
-    this.schemaName = schemaName
-    this.tableName = tableName
-    this.columns = new ColumnArray([])
-    this.pkey = 'id'
+export class DatabaseTable extends TableBase {
+  constructor({
+    schemaName,
+    tableName,
+    pkeyIndex = 0,
+    columns = new ColumnArray([]),
+  }) {
+    super({ schemaName, tableName, pkeyIndex })
+    this.columns = columns
+    this.pkeyName = this.columns.items[pkeyIndex].name
   }
 
   getState = () => sq.from(`"${snakeCase(this.schemaName)}".${snakeCase(this.tableName)}`)
 
-  sqlizePkey = () => `${snakeCase(this.tableName)}.${snakeCase(this.pkey)}`
+  sqlizePkey = () => `${snakeCase(this.tableName)}.${snakeCase(this.pkeyName)}`
 
   from = () => new Table(this.getState(), this.columns)
 
@@ -28,8 +33,8 @@ export class DatabaseTable {
     try {
       this.columns.validate(data)
       const newData = mapKeys(data, (value, key) => snakeCase(key))
-      delete newData[this.pkey]
-      // const sql = this.getState().insert(newData).return(this.pkey).query
+      delete newData[this.pkeyName]
+      // const sql = this.getState().insert(newData).return(this.pkeyName).query
       const sql = this.getState().insert(newData).return('*').query
       const res = await client.query(sql.text, sql.args)
       if (res.rowCount === 0) throw new errors.AddFailedError()
@@ -59,11 +64,11 @@ export class DatabaseTable {
   update = async ({ data, pkeyValue }, client = db) => {
     try {
       const tempData = data
-      tempData[`${this.pkey}`] = pkeyValue
+      tempData[`${this.pkeyName}`] = pkeyValue
       this.columns.validate(tempData)
       const newData = mapKeys(data, (value, key) => snakeCase(key))
-      delete newData[this.pkey]
-      const sql = this.getState().where`${sq.raw(`${this.pkey}`)} = ${pkeyValue}`.set(newData).return('*').query
+      delete newData[this.pkeyName]
+      const sql = this.getState().where`${sq.raw(`${this.pkeyName}`)} = ${pkeyValue}`.set(newData).return('*').query
       const res = await client.query(sql.text, sql.args)
       if (res.rowCount === 0) throw new errors.UpdateFailedError(`${pkeyValue}`)
       return res.rows[0]
@@ -92,10 +97,10 @@ export class DatabaseTable {
   delete = async (pkeyValue, client = db) => {
     try {
       const data = {
-        [`${this.pkey}`]: pkeyValue,
+        [`${this.pkeyName}`]: pkeyValue,
       }
       this.columns.validate(data)
-      const sql = this.getState().where`${sq.raw(`${this.pkey}`)} = ${pkeyValue}`.delete.query
+      const sql = this.getState().where`${sq.raw(`${this.pkeyName}`)} = ${pkeyValue}`.delete.query
       const res = await client.query(sql.text, sql.args)
       if (res.rowCount === 0) throw new errors.DeleteFailedError(`${pkeyValue}`)
       return pkeyValue
