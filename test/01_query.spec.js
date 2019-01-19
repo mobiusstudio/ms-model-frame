@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 const { DatabaseTable, ColumnArray } = global.models
 
 class Question extends DatabaseTable {
@@ -19,7 +20,7 @@ class Question extends DatabaseTable {
         },
         {
           name: 'answerId',
-          foreign: 'answer',
+          foreign: ['library', 'answer'],
           type: 'id',
         },
       ],

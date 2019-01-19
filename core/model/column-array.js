@@ -2,6 +2,7 @@ import joi from 'joi'
 import { snakeCase } from 'lodash'
 import { types as T } from '../libs/types'
 import { Column } from './column'
+import { ColumnAggr } from './column-aggr'
 import errors from '../errors'
 
 errors.register({
@@ -9,21 +10,20 @@ errors.register({
 })
 
 export class ColumnArray {
-  constructor({
-    schemaName,
-    tableName,
-    items,
-  }) {
+  constructor(items) {
     this.items = items.map((item) => {
       const {
+        schemaName,
+        tableName,
         type,
         name,
         alias = null,
         foreign = null,
         required = false,
         default: def = null,
+        aggrType = null,
       } = item
-      return new Column({
+      const newColumn = new Column({
         schemaName,
         tableName,
         type,
@@ -33,6 +33,8 @@ export class ColumnArray {
         required,
         default: def,
       })
+      if (aggrType && typeof aggrType === 'string') return new ColumnAggr(aggrType, alias, newColumn)
+      return newColumn
     })
   }
 
@@ -72,7 +74,7 @@ export class ColumnArray {
     const newItems = this.items.filter((column) => {
       let flag = false
       names.forEach((name) => {
-        if (name === column.name || name === `${column.table}.${column.name}`) {
+        if (name === column.name || name === `${column.tableName}.${column.name}`) {
           flag = true
         }
       })
@@ -85,7 +87,7 @@ export class ColumnArray {
     const newItems = this.items.filter((column) => {
       let flag = true
       names.forEach((name) => {
-        if (name === column.name || name === `${column.table}.${column.name}`) {
+        if (name === column.name || name === `${column.tableName}.${column.name}`) {
           flag = false
         }
       })
@@ -99,5 +101,5 @@ export class ColumnArray {
     return new ColumnArray(newItems)
   }
 
-  first = name => this.items.find(column => name === column.name || name === `${column.table}.${column.name}`)
+  first = name => this.items.find(column => name === column.name || name === `${column.tableName}.${column.name}`)
 }

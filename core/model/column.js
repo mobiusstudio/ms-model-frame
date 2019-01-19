@@ -27,8 +27,13 @@ export class Column extends ColumnBase {
 
   sqlize = () => `${snakeCase(this.tableName)}.${snakeCase(this.name)}`
 
-  aggr = (aggrType, alias) => {
-    const res = new ColumnAggr(aggrType, alias, this)
-    return res
+  sqlizeForeign = () => {
+    if (this.foreign === null) return null
+    if (typeof this.foreign === 'string') return `"${snakeCase(this.schemaName)}".${snakeCase(this.foreign)}`
+    if (this.foreign.length === 1) return `"${snakeCase(this.schemaName)}".${snakeCase(this.foreign[0])}`
+    if (this.foreign.length === 2) return `"${snakeCase(this.foreign[0])}".${snakeCase(this.foreign[1])}`
+    return null
   }
+
+  aggr = (aggrType, alias) => new ColumnAggr(aggrType, alias, this)
 }

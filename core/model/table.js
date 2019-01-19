@@ -20,30 +20,33 @@ export class Table {
   }
 
   join = (dt) => {
+    const { schemaName, tableName } = dt
+    const dtName = `"${snakeCase(schemaName)}".${snakeCase(tableName)}`
     const ons = {}
     this.columns.forEach((column) => {
-      if (column.foreign === dt.tableName) {
+      if (column.sqlizeForeign() === dtName) {
         ons[column.sqlize()] = sq.raw(dt.sqlizePkey())
       }
     })
-    const state = this.state.join(`"${snakeCase(dt.schemaName)}".${snakeCase(dt.tableName)}`)
-      .on(ons)
+    const state = this.state.join(dtName).on(ons)
     const columns = this.columns.concat(dt.columns)
-    return new Table(state, columns) // TODO: return this
+    return new Table(state, columns)
   }
 
   groupBy = (columns, aggrColumns) => {
     const newColumns = columns.concat(aggrColumns)
-    const state = this.state.groupBy(columns.map(column => column.sqlize()))
+    const state = this.state.groupBy(columns.map((column) => {
+      return column.sqlize()
+    }))
       .return(newColumns.objlize())
 
-    return new Table(state, newColumns) // TODO: return this
+    return new Table(state, newColumns)
   }
 
   select = (columns = null) => {
     const newColumns = columns || this.columns
     const state = this.state.return(newColumns.objlize())
-    return new Table(state, newColumns) // TODO: return this
+    return new Table(state, newColumns)
   }
 
   filter = (state, filters) => {

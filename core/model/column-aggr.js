@@ -1,3 +1,4 @@
+import { snakeCase } from 'lodash'
 import { ColumnBase } from '../libs/schema/base'
 
 export class ColumnAggr extends ColumnBase {
@@ -18,8 +19,8 @@ export class ColumnAggr extends ColumnBase {
 
   sqlize = () => {
     switch (this.aggrType) {
-      case 'array': return `array_agg(${super.sqlize()})`
-      case 'min': return `min(${super.sqlize()})`
+      case 'array': return `array_agg(${snakeCase(this.tableName)}.${snakeCase(this.name)})`
+      case 'min': return `min(${snakeCase(this.tableName)}.${snakeCase(this.name)})`
       case 'max':
       case 'avg':
       case 'sum':

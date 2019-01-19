@@ -24,12 +24,14 @@ export class DatabaseTable extends TableBase {
       pkeyIndex,
       columns,
     })
+    this.schemaName = schemaName
+    this.tableName = tableName
     this.pkeyName = columns[pkeyIndex].name || '#pkeyName#'
-    this.columns = new ColumnArray({
+    this.columns = new ColumnArray(columns.map(column => ({
       schemaName,
       tableName,
-      items: columns,
-    })
+      ...column,
+    })))
   }
 
   getState = () => sq.from(`"${snakeCase(this.schemaName)}".${snakeCase(this.tableName)}`)
