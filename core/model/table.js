@@ -35,9 +35,7 @@ export class Table {
 
   groupBy = (columns, aggrColumns) => {
     const newColumns = columns.concat(aggrColumns)
-    const state = this.state.groupBy(columns.map((column) => {
-      return column.sqlize()
-    }))
+    const state = this.state.groupBy(columns.map(column => column.sqlize()))
       .return(newColumns.objlize())
 
     return new Table(state, newColumns)
