@@ -37,13 +37,19 @@ CREATE TABLE "user".user
   username VARCHAR,
   password VARCHAR,
   id_token VARCHAR,
-  create_time bigint DEFAULT unix_now(),
-  last_update_time bigint DEFAULT unix_now(),
+  created bigint DEFAULT unix_now(),
+  last_updated bigint DEFAULT unix_now(),
   PRIMARY KEY (id)
 )
 WITH (
   OIDS=FALSE
 );
+
+CREATE TRIGGER last_updated
+  BEFORE UPDATE
+  ON "user".user
+  FOR EACH ROW
+  EXECUTE PROCEDURE update_timestamp();
 
 --------------------------------
 -- profile notes:
@@ -56,10 +62,16 @@ CREATE TABLE "user".profile
   age INTEGER,
   lover_id BIGINT REFERENCES "user".user,
   car_id BIGINT,
-  create_time bigint DEFAULT unix_now(),
-  last_update_time bigint DEFAULT unix_now(),
+  created bigint DEFAULT unix_now(),
+  last_updated bigint DEFAULT unix_now(),
   PRIMARY KEY (user_id)
 )
 WITH (
   OIDS=FALSE
 );
+
+CREATE TRIGGER last_updated
+  BEFORE UPDATE
+  ON "user".profile
+  FOR EACH ROW
+  EXECUTE PROCEDURE update_timestamp();

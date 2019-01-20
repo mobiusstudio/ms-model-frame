@@ -34,10 +34,16 @@ CREATE TABLE "task".task
   title varchar NOT NULL,
   content varchar,
   deadline bigint,
-  create_time bigint DEFAULT unix_now(),
-  last_update_time bigint DEFAULT unix_now(),
+  created bigint DEFAULT unix_now(),
+  last_updated bigint DEFAULT unix_now(),
   PRIMARY KEY (id)
 )
 WITH (
   OIDS=FALSE
 );
+
+CREATE TRIGGER last_updated
+  BEFORE UPDATE
+  ON "task".task
+  FOR EACH ROW
+  EXECUTE PROCEDURE update_timestamp();
