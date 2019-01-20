@@ -11,13 +11,13 @@ const GLOBALS = {
 
 // 打入 babel 所需要的 runtime，生产环境不再需要安装 babel packages
 const compiledPackages = [
-  '@babel/polyfill',
+  '@babel/runtime',
 ]
 
 const config = {
   context: path.resolve(__dirname, '../src'),
 
-  entry: ['./index.js'],
+  entry: ['@babel/polyfill/noConflict', './index.js'],
 
   output: {
     path: path.resolve(__dirname, '../dist'),
