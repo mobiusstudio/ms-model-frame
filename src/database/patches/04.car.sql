@@ -35,7 +35,7 @@ CREATE TABLE "car".car
 (
   id BIGINT NOT NULL DEFAULT "car".car_id(),
   car_name VARCHAR NOT NULL,
-  owner_id BIGINT NOT NULL REFERENCES "user".user,
+  owner_id BIGINT,
   create_time bigint DEFAULT unix_now(),
   last_update_time bigint DEFAULT unix_now(),
   PRIMARY KEY (id)

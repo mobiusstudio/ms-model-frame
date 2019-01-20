@@ -1,4 +1,4 @@
-import { snakeCase, mapKeys } from 'lodash'
+import { snakeCase, camelCase, mapKeys } from 'lodash'
 import { TableBase } from '../libs/schema/base'
 import { Table } from './table'
 import { ColumnArray } from './column-array'
@@ -49,7 +49,7 @@ export class DatabaseTable extends TableBase {
       const sql = this.getState().insert(newData).return('*').query
       const res = await client.query(sql.text, sql.args)
       if (res.rowCount === 0) throw new errors.AddFailedError()
-      return res.rows[0]
+      return mapKeys(res.rows[0], (value, key) => camelCase(key))
     } catch (error) {
       throw error
     }
@@ -79,10 +79,10 @@ export class DatabaseTable extends TableBase {
       this.columns.validate(tempData)
       const newData = mapKeys(data, (value, key) => snakeCase(key))
       delete newData[this.pkeyName]
-      const sql = this.getState().where`${sq.raw(`${this.pkeyName}`)} = ${pkeyValue}`.set(newData).return('*').query
+      const sql = this.getState().where`${sq.raw(`${snakeCase(this.pkeyName)}`)} = ${pkeyValue}`.set(newData).return('*').query
       const res = await client.query(sql.text, sql.args)
       if (res.rowCount === 0) throw new errors.UpdateFailedError(`${pkeyValue}`)
-      return res.rows[0]
+      return mapKeys(res.rows[0], (value, key) => camelCase(key))
     } catch (error) {
       throw error
     }

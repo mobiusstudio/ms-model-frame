@@ -35,7 +35,7 @@ CREATE TABLE "user".user
 (
   id BIGINT NOT NULL DEFAULT "user".user_id(),
   username VARCHAR,
-  passward VARCHAR,
+  password VARCHAR,
   id_token VARCHAR,
   create_time bigint DEFAULT unix_now(),
   last_update_time bigint DEFAULT unix_now(),
@@ -54,7 +54,7 @@ CREATE TABLE "user".profile
   user_id BIGINT NOT NULL REFERENCES "user".user,
   name VARCHAR,
   age INTEGER,
-  lover_id BIGINT NOT NULL REFERENCES "user".user,
+  lover_id BIGINT REFERENCES "user".user,
   car_id BIGINT,
   create_time bigint DEFAULT unix_now(),
   last_update_time bigint DEFAULT unix_now(),

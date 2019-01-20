@@ -1,3 +1,4 @@
+
 export const checkObject = (obj, data, model) => {
   const newData = {}
   Object.keys(data).forEach((key) => {

@@ -1,3 +1,4 @@
+-- task
 
 SET search_path = task, pg_catalog;
 

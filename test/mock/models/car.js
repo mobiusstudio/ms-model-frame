@@ -19,8 +19,6 @@ export class Car extends DatabaseTable {
         {
           type: 'id',
           name: 'ownerId',
-          foreign: ['user', 'user'],
-          required: 'true',
         },
       ],
     })

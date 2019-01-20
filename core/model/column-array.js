@@ -53,6 +53,7 @@ export class ColumnArray {
     const schema = joi.object().keys(obj)
     const result = joi.validate(data, schema)
     if (result.error) {
+      console.log(result.error)
       throw new errors.ValidateFailedError(result.error.details[0].message)
     }
   }

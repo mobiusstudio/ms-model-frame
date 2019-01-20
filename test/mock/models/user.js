@@ -17,7 +17,7 @@ export class User extends DatabaseTable {
         },
         {
           type: 'password',
-          name: 'passward',
+          name: 'password',
         },
         {
           type: 'string',
@@ -38,7 +38,7 @@ export class Profile extends DatabaseTable {
         {
           type: 'id',
           name: 'userId',
-          foreign: 'user',
+          foreign: ['user', 'user'],
         },
         {
           type: 'string',
@@ -52,12 +52,10 @@ export class Profile extends DatabaseTable {
           type: 'id',
           name: 'loverId',
           foreign: ['user', 'user'],
-          required: 'true',
         },
         {
           type: 'id',
           name: 'carId',
-          foreign: ['car', 'car'],
         },
       ],
     })
