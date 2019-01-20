@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import joi from 'joi'
-import { schemaRules } from '../types/schema'
+import { schemaRules } from '../types'
 
 export class ColumnBase {
   constructor({

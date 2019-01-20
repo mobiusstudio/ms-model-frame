@@ -1,5 +1,5 @@
 import { snakeCase, camelCase, mapKeys } from 'lodash'
-import { TableBase } from '../libs/schema/base'
+import { TableBase } from '../libs'
 import { Table } from './table'
 import { ColumnArray } from './column-array'
 import { sq } from './sq'

@@ -1,7 +1,7 @@
 import joi from 'joi'
 
-const schemaName = joi.string().required()
-const tableName = joi.string().required()
+const schemaName = joi.string().required().allow('')
+const tableName = joi.string().required().allow('')
 
 export const schemaRules = {
   schemaName,
@@ -9,11 +9,11 @@ export const schemaRules = {
   column: {
     schemaName,
     tableName,
-    type: joi.string().required(),
-    name: joi.string().required(),
+    type: joi.string().required().allow(null),
+    name: joi.string().required().allow(null),
     alias: joi.string().allow(null),
     foreign: joi.alternatives().try(
-      joi.array().min(1).max(2).items(joi.string()),
+      joi.array().min(1).max(3).items(joi.string()),
       joi.string(),
     ).allow(null),
     required: joi.boolean().allow(null),
@@ -27,7 +27,7 @@ export const schemaRules = {
   table: {
     schemaName,
     tableName,
-    pkeyIndex: joi.number().integer().min(0),
+    pkeyIndex: joi.number().integer().min(0).default(0),
     columns: joi.array(),
   },
   schema: {

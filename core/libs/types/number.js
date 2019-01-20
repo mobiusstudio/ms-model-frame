@@ -53,7 +53,7 @@ export const number = {
   },
 
   timestamp: {
-    sql: ({ req, def }) => new Sql('timestamp').tostring({ req, def }),
+    sql: ({ req, def }) => new Sql('bigint').tostring({ req, def }),
     swg: ({ req, def }) => new Swg(`type: 'integer',\nformat: 'int64'`).tostring({ req, def }),
     joi: ({ req, def }) => new Joi('joi.date().timestamp()').tostring({ req, def }),
     rul: ({ req, def }) => new Rul(joi.date().timestamp()).torule({ req, def }),

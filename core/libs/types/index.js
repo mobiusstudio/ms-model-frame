@@ -20,3 +20,5 @@ Object.keys(types).forEach((p) => {
 })
 
 export const find = s => Object.keys(types).find(p => p === s || Object.keys(types[p]).includes(s))
+
+export { schemaRules } from './schema'

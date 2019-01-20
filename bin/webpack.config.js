@@ -63,6 +63,7 @@ const config = {
         include: [
           path.resolve(__dirname, '../src'),
           path.resolve(__dirname, '../core'),
+          // path.resolve(__dirname, '../../ymir-codegen/src/libs'),
         ],
       },
       {
@@ -76,6 +77,7 @@ const config = {
     modules: [
       path.resolve(__dirname, '../src'),
       path.resolve(__dirname, '../core'),
+      // path.resolve(__dirname, '../../ymir-codegen/src/libs'),
       'node_modules',
     ],
     extensions: ['.webpack.js', '.js', '.json'],

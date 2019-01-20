@@ -1,5 +1,5 @@
 import { snakeCase } from 'lodash'
-import { ColumnBase } from '../libs/schema/base'
+import { ColumnBase } from '../libs'
 
 export class ColumnAggr extends ColumnBase {
   constructor(aggrType, alias, column) {
