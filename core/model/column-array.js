@@ -48,7 +48,7 @@ export class ColumnArray {
     const obj = {}
     this.items.forEach((item) => {
       const { type, name, required: req, default: def } = item
-      obj[name] = T.get(type).rul({ req, def })
+      obj[name] = T.get(type).joi({ req, def })
     })
     const schema = joi.object().keys(obj)
     const result = joi.validate(data, schema)

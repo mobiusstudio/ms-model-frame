@@ -41,7 +41,7 @@ export class Sql extends Type {
   static seqId = () => new Sql('serial').tostring({ req: false, def: null })
 }
 
-export class Joi extends Type {
+export class Jot extends Type {
   constructor(str) {
     super({
       str,
@@ -52,7 +52,7 @@ export class Joi extends Type {
   }
 }
 
-export class Swg extends Type {
+export class Swt extends Type {
   constructor(str) {
     super({
       str,
@@ -63,14 +63,48 @@ export class Swg extends Type {
   }
 }
 
-export class Rul {
-  constructor(rul) {
-    this.rul = rul
+export class Joi {
+  constructor(joi) {
+    this.joi = joi
   }
 
-  torule = ({ req, def }) => {
-    if (req === true || req === 'true' || req === 1) this.rul = this.rul.required()
-    if (def !== undefined) this.rul = this.rul.default(def)
-    return this.rul
+  torule = ({ req = false, def = null } = { req: false, def: null }) => {
+    if (req === true || req === 'true' || req === 1) this.joi = this.joi.required()
+    if (def !== undefined) this.joi = this.joi.default(def)
+    return this.joi
   }
 }
+
+export class Swg {
+  constructor(swg) {
+    this.swg = swg
+  }
+
+  toinstance = (obj = null) => {
+    if (obj) {
+      const { required = null, req = null, default: df = null, def = null, ...arg } = obj
+      if (required || req) this.swg.required = required || req
+      if (df || def) this.swg.default = df || def
+      return {
+        ...this.swg,
+        ...arg,
+      }
+    }
+    return this.swg
+  }
+}
+
+// export const generateSwg = obj => ({
+//   required = false,
+//   req = false,
+//   default: df = null,
+//   def = null,
+//   ...arg
+// } = {
+//   required: false,
+//   default: null,
+// }) => new Swg(obj).toinstance({
+//   req: required || req,
+//   def: df || def,
+//   ...arg,
+// })
