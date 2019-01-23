@@ -18,6 +18,7 @@ export class User extends DatabaseTable {
         {
           type: 'password',
           name: 'password',
+          alias: 'user_password',
         },
         {
           type: 'string',

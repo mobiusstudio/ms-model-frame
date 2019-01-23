@@ -27,6 +27,7 @@ export class DatabaseTable extends TableBase {
     this.schemaName = schemaName
     this.tableName = tableName
     this.pkeyName = columns[pkeyIndex].name || '#pkeyName#'
+    this.pkeyType = columns[pkeyIndex].type
     this.columns = new ColumnArray(columns.map(column => ({
       schemaName,
       tableName,
@@ -43,7 +44,7 @@ export class DatabaseTable extends TableBase {
   add = async ({ data, pkeyValue = null }, client = db) => {
     try {
       const tempData = data
-      this.columns.validate(tempData)
+      this.columns.validateAll(tempData)
       if (!pkeyValue) delete tempData[this.pkeyName]
       else tempData[this.pkeyName] = pkeyValue
       const newData = mapKeys(tempData, (value, key) => snakeCase(key))
@@ -77,7 +78,7 @@ export class DatabaseTable extends TableBase {
     try {
       const tempData = data
       tempData[`${this.pkeyName}`] = pkeyValue
-      this.columns.validate(tempData)
+      this.columns.validateAll(tempData)
       const newData = mapKeys(data, (value, key) => snakeCase(key))
       delete newData[snakeCase(this.pkeyName)]
       const sql = this.getState().where`${sq.raw(`${snakeCase(this.pkeyName)}`)} = ${pkeyValue}`.set(newData).return('*').query
@@ -108,11 +109,8 @@ export class DatabaseTable extends TableBase {
 
   delete = async (pkeyValue, client = db) => {
     try {
-      const data = {
-        [`${this.pkeyName}`]: pkeyValue,
-      }
-      this.columns.validate(data)
-      const sql = this.getState().where`${sq.raw(`${this.pkeyName}`)} = ${pkeyValue}`.delete.query
+      this.columns.validate(this.pkeyType, pkeyValue)
+      const sql = this.getState().where`${sq.raw(`${snakeCase(this.pkeyName)}`)} = ${pkeyValue}`.delete.query
       const res = await client.query(sql.text, sql.args)
       if (res.rowCount === 0) throw new errors.DeleteFailedError(`${pkeyValue}`)
       return pkeyValue
