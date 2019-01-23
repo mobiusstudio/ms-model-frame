@@ -14,4 +14,5 @@ export const sql = new Set([
   'FREEZE',
   'LOCALTIME',
   'LOCALTIMESTAMP',
+  'PASSWORD',
 ])

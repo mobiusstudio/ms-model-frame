@@ -18,6 +18,7 @@ export class User extends DatabaseTable {
         {
           type: 'password',
           name: 'password',
+          alias: 'user_pwd',
         },
         {
           type: 'string',
@@ -28,7 +29,7 @@ export class User extends DatabaseTable {
   }
 }
 
-export class Profile extends DatabaseTable {
+export class UserProfile extends DatabaseTable {
   constructor() {
     super({
       schemaName: 'user',

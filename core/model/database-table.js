@@ -36,16 +36,17 @@ export class DatabaseTable extends TableBase {
 
   getState = () => sq.from(`"${snakeCase(this.schemaName)}".${snakeCase(this.tableName)}`)
 
-  sqlizePkey = () => `${snakeCase(this.tableName)}.${snakeCase(this.pkeyName)}`
+  sqlizePkey = () => `"${snakeCase(this.schemaName)}".${snakeCase(this.tableName)}.${snakeCase(this.pkeyName)}`
 
   from = () => new Table(this.getState(), this.columns)
 
-  add = async (data, client = db) => {
+  add = async ({ data, pkeyValue = null }, client = db) => {
     try {
-      this.columns.validate(data)
-      const newData = mapKeys(data, (value, key) => snakeCase(key))
-      delete newData[this.pkeyName]
-      // const sql = this.getState().insert(newData).return(this.pkeyName).query
+      const tempData = data
+      this.columns.validate(tempData)
+      if (!pkeyValue) delete tempData[this.pkeyName]
+      else tempData[this.pkeyName] = pkeyValue
+      const newData = mapKeys(tempData, (value, key) => snakeCase(key))
       const sql = this.getState().insert(newData).return('*').query
       const res = await client.query(sql.text, sql.args)
       if (res.rowCount === 0) throw new errors.AddFailedError()
@@ -78,7 +79,7 @@ export class DatabaseTable extends TableBase {
       tempData[`${this.pkeyName}`] = pkeyValue
       this.columns.validate(tempData)
       const newData = mapKeys(data, (value, key) => snakeCase(key))
-      delete newData[this.pkeyName]
+      delete newData[snakeCase(this.pkeyName)]
       const sql = this.getState().where`${sq.raw(`${snakeCase(this.pkeyName)}`)} = ${pkeyValue}`.set(newData).return('*').query
       const res = await client.query(sql.text, sql.args)
       if (res.rowCount === 0) throw new errors.UpdateFailedError(`${pkeyValue}`)

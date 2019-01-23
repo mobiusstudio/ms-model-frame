@@ -25,7 +25,8 @@ export class Column extends ColumnBase {
     })
   }
 
-  sqlize = () => `${snakeCase(this.tableName)}.${snakeCase(this.name)}`
+  sqlize = () => `"${snakeCase(this.schemaName)}".${snakeCase(this.tableName)}.${snakeCase(this.name)}`
+
 
   sqlizeForeign = () => {
     if (this.foreign === null) return null

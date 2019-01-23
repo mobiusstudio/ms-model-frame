@@ -1,5 +1,5 @@
 import { checkObject } from './utils'
-import { User, Profile } from './mock/models/user'
+import { User, UserProfile } from './mock/models/user'
 import { Car } from './mock/models/car'
 
 
@@ -26,11 +26,13 @@ const xts = {
 }
 
 
-describe('========== Add ==========', () => {
+describe('========== Join ==========', () => {
   it('add account', async () => {
     const user = new User()
     try {
-      const res = await user.add(mobiusor)
+      const res = await user.add({
+        data: mobiusor,
+      })
       checkObject(res, mobiusor, user)
       mobiusor.id = res.id
     } catch (error) {
@@ -38,7 +40,9 @@ describe('========== Add ==========', () => {
     }
 
     try {
-      const res = await user.add(elaine)
+      const res = await user.add({
+        data: elaine,
+      })
       checkObject(res, elaine, user)
       elaine.id = res.id
     } catch (error) {
@@ -47,20 +51,24 @@ describe('========== Add ==========', () => {
   })
 
   it('add profile', async () => {
-    const profile = new Profile()
+    const profile = new UserProfile()
     try {
-      mProfile.userId = mobiusor.id
-      mProfile.loverId = eProfile.userId
-      const pres = await profile.add(mProfile)
+      mProfile.loverId = elaine.id
+      const pres = await profile.add({
+        data: mProfile,
+        pkeyValue: mobiusor.id,
+      })
       checkObject(pres, mProfile, profile)
     } catch (error) {
       throw error
     }
 
     try {
-      eProfile.userId = elaine.id
-      eProfile.loverId = mProfile.userId
-      const pres = await profile.add(eProfile)
+      eProfile.loverId = mobiusor.id
+      const pres = await profile.add({
+        data: eProfile,
+        pkeyValue: elaine.id,
+      })
       checkObject(pres, eProfile, profile)
     } catch (error) {
       throw error
@@ -70,7 +78,9 @@ describe('========== Add ==========', () => {
   it('add car', async () => {
     const car = new Car()
     try {
-      const res = await car.add(xts)
+      const res = await car.add({
+        data: xts,
+      })
       checkObject(res, xts, car)
       xts.id = res.id
     } catch (error) {
@@ -79,7 +89,7 @@ describe('========== Add ==========', () => {
   })
 
   it('update profile', async () => {
-    const profile = new Profile()
+    const profile = new UserProfile()
     const newMp = {
       carId: xts.id,
     }

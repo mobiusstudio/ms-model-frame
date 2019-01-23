@@ -19,8 +19,8 @@ export class ColumnAggr extends ColumnBase {
 
   sqlize = () => {
     switch (this.aggrType) {
-      case 'array': return `array_agg(${snakeCase(this.tableName)}.${snakeCase(this.name)})`
-      case 'min': return `min(${snakeCase(this.tableName)}.${snakeCase(this.name)})`
+      case 'array': return `array_agg("${snakeCase(this.schemaName)}".${snakeCase(this.tableName)}.${snakeCase(this.name)})`
+      case 'min': return `min("${snakeCase(this.schemaName)}".${snakeCase(this.tableName)}.${snakeCase(this.name)})`
       case 'max':
       case 'avg':
       case 'sum':

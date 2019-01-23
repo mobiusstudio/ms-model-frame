@@ -1,1 +1,1 @@
-export * from '../../test/mock/models/task'
+export * from '../../test/mock/models'

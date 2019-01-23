@@ -12,7 +12,9 @@ describe('========== Base ==========', () => {
 
   it('add', async () => {
     try {
-      const res = await task.add(taskDataAdd)
+      const res = await task.add({
+        data: taskDataAdd,
+      })
       checkObject(res, taskDataAdd, task)
       taskId = res.id
     } catch (error) {
@@ -22,7 +24,11 @@ describe('========== Base ==========', () => {
 
   it('batch add', async () => {
     try {
-      const dataArray = [taskDataAdd, taskDataAdd, taskDataAdd]
+      const dataArray = [
+        { data: taskDataAdd },
+        { data: taskDataAdd },
+        { data: taskDataAdd },
+      ]
       const res = await task.batchAdd(dataArray)
       res.forEach(data => (checkObject(data, taskDataAdd, task)))
       taskIds = res.map(data => data.id)

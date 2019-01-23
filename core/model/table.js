@@ -19,13 +19,13 @@ export class Table {
     return new Table(state, this.columns)
   }
 
-  join = (dt) => {
+  join = (dt) => { // TODO: fix join
     const { schemaName, tableName } = dt
     const dtName = `"${snakeCase(schemaName)}".${snakeCase(tableName)}`
     const ons = {}
     this.columns.forEach((column) => {
       if (column.sqlizeForeign() === dtName) {
-        ons[column.sqlize()] = sq.raw(dt.sqlizePkey())
+        ons[column.name] = sq.raw(dt.sqlizePkey())
       }
     })
     const state = this.state.join(dtName).on(ons)
@@ -33,7 +33,7 @@ export class Table {
     return new Table(state, columns)
   }
 
-  groupBy = (columns, aggrColumns) => {
+  groupBy = (columns, aggrColumns) => { // TODO: fix group by
     const newColumns = columns.concat(aggrColumns)
     const state = this.state.groupBy(columns.map(column => column.sqlize()))
       .return(newColumns.objlize())
