@@ -19,7 +19,7 @@ export class Table {
     return new Table(state, this.columns)
   }
 
-  join = (dt) => { // TODO: fix join
+  ljoin = (dt) => { // TODO: fix join
     const { schemaName, tableName } = dt
     const dtName = `"${snakeCase(schemaName)}".${snakeCase(tableName)}`
     const ons = {}
@@ -28,7 +28,7 @@ export class Table {
         ons[column.name] = sq.raw(dt.sqlizePkey())
       }
     })
-    const state = this.state.join(dtName).on(ons)
+    const state = this.state.leftJoin(dtName).on(ons)
     const columns = this.columns.concat(dt.columns)
     return new Table(state, columns)
   }

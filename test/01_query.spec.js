@@ -76,14 +76,14 @@ describe('========== SELECT / JOIN / GROUP BY ==========', () => {
     query.args[0].should.equal('%资料%')
   })
 
-  it('join', () => {
+  it('ljoin', () => {
     const question = new Question()
     const answer = new Answer()
     const key = '%资料%'
-    const table = question.from().where`content LIKE ${key}`.join(answer)
+    const table = question.from().where`content LIKE ${key}`.ljoin(answer)
     const selected = table.columns.filter(['question.id', 'content', 'answer.id', 'description'])
     const { query } = table.select(selected).state
-    query.text.should.equal('select "library".question.id question_id, "library".question.content content, "library".answer.id answer_id, "library".answer.description description from "library".question join "library".answer on (answer_id = "library".answer.id) where (content LIKE $1)')
+    query.text.should.equal('select "library".question.id question_id, "library".question.content content, "library".answer.id answer_id, "library".answer.description description from "library".question left join "library".answer on (answer_id = "library".answer.id) where (content LIKE $1)')
     query.args[0].should.equal('%资料%')
   })
 
@@ -91,13 +91,13 @@ describe('========== SELECT / JOIN / GROUP BY ==========', () => {
     const question = new Question()
     const answer = new Answer()
     const key = '%资料%'
-    const table = question.from().where`content LIKE ${key}`.join(answer)
+    const table = question.from().where`content LIKE ${key}`.ljoin(answer)
     const aggrs = new ColumnArray([
       table.columns.first('id').aggr('array', 'aggr_id'),
       table.columns.first('content').aggr('array', 'aggr_content'),
     ])
     const { query } = table.groupBy(table.columns.filter(['answerId']), aggrs).state
-    query.text.should.equal('select "library".question.answer_id answer_id, array_agg("library".question.id) aggr_id, array_agg("library".question.content) aggr_content from "library".question join "library".answer on (answer_id = "library".answer.id) where (content LIKE $1) group by ("library".question.answer_id)')
+    query.text.should.equal('select "library".question.answer_id answer_id, array_agg("library".question.id) aggr_id, array_agg("library".question.content) aggr_content from "library".question left join "library".answer on (answer_id = "library".answer.id) where (content LIKE $1) group by ("library".question.answer_id)')
     query.args[0].should.equal('%资料%')
   })
 
