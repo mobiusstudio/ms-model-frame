@@ -35,6 +35,7 @@ describe('========== Join ==========', () => {
       })
       checkObject(res, mobiusor, user)
       mobiusor.id = res.id
+      xts.ownerId = res.id
     } catch (error) {
       throw error
     }
@@ -88,7 +89,7 @@ describe('========== Join ==========', () => {
     }
   })
 
-  it('update profile', async () => {
+  it('update mobiusor profile', async () => {
     const profile = new UserProfile()
     const newMp = {
       carId: xts.id,
@@ -102,7 +103,10 @@ describe('========== Join ==========', () => {
     } catch (error) {
       throw error
     }
+  })
 
+  it('update elaine profile', async () => {
+    const profile = new UserProfile()
     const newEp = {
       carId: xts.id,
     }
@@ -115,5 +119,16 @@ describe('========== Join ==========', () => {
     } catch (error) {
       throw error
     }
+  })
+
+  it('left join user/profile/car', async () => {
+    const user = new User()
+    const profile = new UserProfile()
+    const car = new Car()
+    const userOn = { userId: '"user".user.id' }
+    const carOn = { carId: '"car".car.id' }
+    const res = await profile.from().ljoin(user, userOn).ljoin(car, carOn).do()
+    console.log(res)
+    // console.log(table.state.query)
   })
 })

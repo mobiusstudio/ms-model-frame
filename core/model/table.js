@@ -19,15 +19,21 @@ export class Table {
     return new Table(state, this.columns)
   }
 
-  ljoin = (dt) => { // TODO: fix join
+  ljoin = (dt, on = null) => { // TODO: fix join
     const { schemaName, tableName } = dt
     const dtName = `"${snakeCase(schemaName)}".${snakeCase(tableName)}`
     const ons = {}
-    this.columns.forEach((column) => {
-      if (column.sqlizeForeign() === dtName) {
-        ons[column.name] = sq.raw(dt.sqlizePkey())
-      }
-    })
+    if (on) {
+      Object.keys(on).forEach((key) => {
+        ons[snakeCase(key)] = sq.raw(on[key])
+      })
+    } else {
+      this.columns.forEach((column) => {
+        if (column.sqlizeForeign() === dtName) {
+          ons[column.name] = sq.raw(dt.sqlizePkey())
+        }
+      })
+    }
     const state = this.state.leftJoin(dtName).on(ons)
     const columns = this.columns.concat(dt.columns)
     return new Table(state, columns)
