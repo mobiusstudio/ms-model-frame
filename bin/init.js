@@ -1,6 +1,6 @@
 import log4js from 'log4js'
 import options from '../test/config/config.json'
-import { configure } from '../src'
+import { configure } from '../dist/models'
 
 const log = log4js.getLogger()
 
