@@ -1,6 +1,6 @@
 import joi from 'joi'
 import { snakeCase } from 'lodash'
-import { typeMap as T } from '../libs'
+import { typeMap as T } from '../libs/types'
 import { Column } from './column'
 import { ColumnAggr } from './column-aggr'
 import errors from '../errors'
